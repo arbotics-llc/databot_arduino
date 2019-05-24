@@ -4,7 +4,7 @@
   "description": "this library gets your databot running to collect sensor data for your experiments",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/arbotics-llc/databot_arduino"
   },
   "authors": {
     "name": "Sean Tucker",
