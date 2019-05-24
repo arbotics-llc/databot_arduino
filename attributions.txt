@@ -1,0 +1,312 @@
+arduinoFFT: https://github.com/kosme/arduinoFFT
+/*
+
+	FFT libray
+	Copyright (C) 2010 Didier Longueville
+	Copyright (C) 2014 Enrique Condes
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
+DallasTemperature: https://github.com/milesburton/Arduino-Temperature-Control-Library
+Miles Burton
+Tim Newsome
+Guil Barros
+Rob Tillaart
+    
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+
+FlexiTimer2: https://github.com/wimleers/flexitimer2
+
+/*
+  FlexiTimer2.h - Using timer2 with a configurable resolution
+  Wim Leers <work@wimleers.com>
+  Based on MsTimer2
+  Javier Valencia <javiervalencia80@gmail.com>
+  History:
+    6/Jun/2014  - Added Teensy 3.0 & 3.1 support
+    16/Dec/2011 - Added Teensy/Teensy++ support (bperrybap)
+		   note: teensy uses timer4 instead of timer2
+    25/April/10 - Based on MsTimer2 V0.5 (from 29/May/09)
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+LowPower: https://github.com/rocketscream/Low-Power
+
+* LowPower Library
+* Version: 1.80
+* Date: 04-10-2018
+* Author: Lim Phang Moh
+* Company: Rocket Scream Electronics
+* Website: www.rocketscream.com
+*
+* This is a lightweight low power library for Arduino.
+*
+* This library is licensed under Creative Commons Attribution-ShareAlike 3.0
+* Unported License.
+
+MPU9250: https://github.com/sparkfun/SparkFun_MPU-9250_Breakout_Arduino_Library
+
+//Open Source library from sparkfun
+
+OneWire: https://github.com/PaulStoffregen/OneWire
+
+/*
+Copyright (c) 2007, Jim Studt  (original old version - many contributors since)
+The latest version of this library may be found at:
+  http://www.pjrc.com/teensy/td_libs_OneWire.html
+OneWire has been maintained by Paul Stoffregen (paul@pjrc.com) since
+January 2010.
+DO NOT EMAIL for technical support, especially not for ESP chips!
+All project support questions must be posted on public forums
+relevant to the board or chips used.  If using Arduino, post on
+Arduino's forum.  If using ESP, post on the ESP community forums.
+There is ABSOLUTELY NO TECH SUPPORT BY PRIVATE EMAIL!
+Github's issue tracker for OneWire should be used only to report
+specific bugs.  DO NOT request project support via Github.  All
+project and tech support questions must be posted on forums, not
+github issues.  If you experience a problem and you are not
+absolutely sure it's an issue with the library, ask on a forum
+first.  Only use github to report issues after experts have
+confirmed the issue is with OneWire rather than your project.
+Back in 2010, OneWire was in need of many bug fixes, but had
+been abandoned the original author (Jim Studt).  None of the known
+contributors were interested in maintaining OneWire.  Paul typically
+works on OneWire every 6 to 12 months.  Patches usually wait that
+long.  If anyone is interested in more actively maintaining OneWire,
+please contact Paul (this is pretty much the only reason to use
+private email about OneWire).
+OneWire is now very mature code.  No changes other than adding
+definitions for newer hardware support are anticipated.
+Version 2.3:
+  Unknown chip fallback mode, Roger Clark
+  Teensy-LC compatibility, Paul Stoffregen
+  Search bug fix, Love Nystrom
+Version 2.2:
+  Teensy 3.0 compatibility, Paul Stoffregen, paul@pjrc.com
+  Arduino Due compatibility, http://arduino.cc/forum/index.php?topic=141030
+  Fix DS18B20 example negative temperature
+  Fix DS18B20 example's low res modes, Ken Butcher
+  Improve reset timing, Mark Tillotson
+  Add const qualifiers, Bertrik Sikken
+  Add initial value input to crc16, Bertrik Sikken
+  Add target_search() function, Scott Roberts
+Version 2.1:
+  Arduino 1.0 compatibility, Paul Stoffregen
+  Improve temperature example, Paul Stoffregen
+  DS250x_PROM example, Guillermo Lovato
+  PIC32 (chipKit) compatibility, Jason Dangel, dangel.jason AT gmail.com
+  Improvements from Glenn Trewitt:
+  - crc16() now works
+  - check_crc16() does all of calculation/checking work.
+  - Added read_bytes() and write_bytes(), to reduce tedious loops.
+  - Added ds2408 example.
+  Delete very old, out-of-date readme file (info is here)
+Version 2.0: Modifications by Paul Stoffregen, January 2010:
+http://www.pjrc.com/teensy/td_libs_OneWire.html
+  Search fix from Robin James
+    http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1238032295/27#27
+  Use direct optimized I/O in all cases
+  Disable interrupts during timing critical sections
+    (this solves many random communication errors)
+  Disable interrupts during read-modify-write I/O
+  Reduce RAM consumption by eliminating unnecessary
+    variables and trimming many to 8 bits
+  Optimize both crc8 - table version moved to flash
+Modified to work with larger numbers of devices - avoids loop.
+Tested in Arduino 11 alpha with 12 sensors.
+26 Sept 2008 -- Robin James
+http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1238032295/27#27
+Updated to work with arduino-0008 and to include skip() as of
+2007/07/06. --RJL20
+Modified to calculate the 8-bit CRC directly, avoiding the need for
+the 256-byte lookup table to be loaded in RAM.  Tested in arduino-0010
+-- Tom Pollard, Jan 23, 2008
+Jim Studt's original library was modified by Josh Larios.
+Tom Pollard, pollard@alum.mit.edu, contributed around May 20, 2008
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Much of the code was inspired by Derek Yerger's code, though I don't
+think much of that remains.  In any event that was..
+    (copyleft) 2006 by Derek Yerger - Free to distribute freely.
+The CRC code was excerpted and inspired by the Dallas Semiconductor
+sample code bearing this copyright.
+//---------------------------------------------------------------------------
+// Copyright (C) 2000 Dallas Semiconductor Corporation, All Rights Reserved.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY,  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL DALLAS SEMICONDUCTOR BE LIABLE FOR ANY CLAIM, DAMAGES
+// OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+//
+// Except as contained in this notice, the name of Dallas Semiconductor
+// shall not be used except as stated in the Dallas Semiconductor
+// Branding Policy.
+//--------------------------------------------------------------------------
+*/
+
+Sparkfun_APDS9301: https://github.com/sparkfun/APDS-9301_Breakout
+
+/*
+This product is open source! The code is beerware; if you see me (or any other SparkFun employee) at the local, and you've found our code helpful, please buy us a round! Please use, reuse, and modify these files as you see fit. Please maintain attribution to SparkFun Electronics and release anything derivative under the same license.
+
+Distributed as-is; no warranty is given.
+
+Your friends at SparkFun.
+/*
+
+Sparkfun_Qwiic_OpenLog_Arduino_Library: https://github.com/sparkfun/SparkFun_Qwiic_OpenLog_Arduino_Library
+
+/*
+The MIT License (MIT)
+
+Copyright (c) 2016 SparkFun Electronics
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+Sparkfun_SGP30_Arduino_Library: https://github.com/sparkfun/SparkFun_SGP30_Arduino_Library
+
+/*
+  This is a library written for the SPG30
+  By Ciara Jekel @ SparkFun Electronics, June 18th, 2018
+  https://github.com/sparkfun/SparkFun_SGP30_Arduino_Library
+  Development environment specifics:
+  Arduino IDE 1.8.5
+  SparkFun labored with love to create this code. Feel like supporting open
+  source hardware? Buy a board from SparkFun!
+  https://www.sparkfun.com/products/14813
+  CRC lookup table from Bastian Molkenthin
+  Copyright (c) 2015 Bastian Molkenthin
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  THE SOFTWARE.
+*/
+
+SparkFun_SHTC3: https://github.com/sparkfun/SparkFun_SHTC3_Arduino_Library
+
+/*
+This product is open source!
+
+The code is released under the GPL v3 license. See the included LICENSE.md for more information.
+
+Distributed as-is; no warranty is given.
+
+- Your friends at SparkFun.
+*/
+
+SparkFunMPL3115A2: https://github.com/sparkfun/SparkFun_MPL3115A2_Breakout_Arduino_Library
+
+/* 
+ MPL3115A2 Barometric Pressure Sensor Library
+ By: Nathan Seidle
+ SparkFun Electronics
+ Date: September 24th, 2013
+ License: This code is public domain but you buy me a beer if you use this and we meet someday (Beerware license).
+ 
+ Get pressure, altitude and temperature from the MPL3115A2 sensor.
+ 
+*/
+
+SparkFun_VEML6075_Arduino_Library: https://github.com/sparkfunX/SparkFun_VEML6075_Arduino_Library
+
+/*
+  This is a library written for the VEML6075 UVA/UVB/UV index Sensopr
+  SparkFun sells these at its website: www.sparkfun.com
+  Do you like this library? Help support SparkFun. Buy a board!
+  https://www.sparkfun.com/products/14748
+  Written by Jim Lindblom @ SparkFun Electronics, May 23, 2018
+
+  The VEML6075 senses UVA and UVB light, which allows for a calculation
+  of the UV index.
+  
+  This library handles the initialization, configuration and monitoring of the 
+  UVA and UVB intensity, and calculation of the UV index.
+  
+  https://github.com/sparkfunX/SparkFun_VEML6075_Arduino_Library
+
+  Development environment specifics:
+  Arduino IDE 1.8.5
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+
+
+

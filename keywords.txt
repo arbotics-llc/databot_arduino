@@ -1,0 +1,8 @@
+databot	KEYWORD1
+updateImuAcceleration	KEYWORD2
+setupIMU	KEYWORD2
+setupMPL3115A2	KEYWORD2
+setupApds KEYWORD2
+setupVEML6075 KEYWORD2
+sendPacket KEYWORD2
+logData KEYWORD2
