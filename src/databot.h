@@ -18,7 +18,7 @@ This program is free software: you can redistribute it and/or modify
 #include "libs/MPU9250.h"
 #include "libs/SparkFun_VEML6075_Arduino_Library.h"
 #include "libs/Sparkfun_APDS9301_Library.h"
-#include "libs/SparkfunMPL3115A2.h"
+#include "libs/SparkFunMPL3115A2.h"
 #include "libs/SparkFun_Qwiic_OpenLog_Arduino_Library.h"
 #include "libs/SparkFun_SHTC3.h"
 #include "libs/SparkFun_SGP30_Arduino_Library.h"

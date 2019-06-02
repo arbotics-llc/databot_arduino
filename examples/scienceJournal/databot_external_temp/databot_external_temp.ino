@@ -4,6 +4,10 @@
 #define I2Cclock 400000
 #define I2Cport Wire
 
+//OneWire on pin 4 of the databot
+OneWire oneWire(4);
+DallasTemperature tempsensor(&oneWire);
+
 OpenLog myLog;
 String myfile = "externaltemperature.txt";
 
@@ -44,6 +48,9 @@ void setup() {
 
 // the loop function runs over and over again forever
 void loop() {
+
+  tempsensor.requestTemperatures();
+  float temperature = tempsensor.getTempCByIndex(0);
 
   //update our json packet with our new sensor values
 
