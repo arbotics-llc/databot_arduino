@@ -38,7 +38,7 @@ void loop() {
 
   Serial.println(co2);
 
-  //flush serial and sleep for 250 milliseconds every loop
+  //flush serial and sleep for 1 second every loop
   Serial.flush();
-  LowPower.powerDown(SLEEP_250MS, ADC_OFF, BOD_OFF);
+  LowPower.powerDown(SLEEP_1S, ADC_OFF, BOD_OFF);
 }
