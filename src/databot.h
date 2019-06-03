@@ -47,23 +47,20 @@ void updateImuGyro(MPU9250 &imu){
     imu.readGyroData(imu.gyroCount);
     
     imu.gx = (float)imu.gyroCount[0] * imu.gRes;
-
     imu.gy = (float)imu.gyroCount[1] * imu.gRes;
-
     imu.gz = (float)imu.gyroCount[2] * imu.gRes;
-
 }
 
 void updateImuMag(MPU9250 &imu){
 
     imu.readMagData(imu.magCount);
 
-    imu.mx = (float)imu.magCount[0] * imu.mRes;
-
-    imu.my = (float)imu.magCount[1] * imu.mRes;
-
-    imu.mz = (float)imu.magCount[2] * imu.mRes;
-
+    imu.mx = (float)imu.magCount[0] * imu.mRes
+               * imu.factoryMagCalibration[0] - imu.magBias[0];
+    imu.my = (float)imu.magCount[1] * imu.mRes
+               * imu.factoryMagCalibration[1] - imu.magBias[1];
+    imu.mz = (float)imu.magCount[2] * imu.mRes
+               * imu.factoryMagCalibration[2] - imu.magBias[2];
 }
 
 

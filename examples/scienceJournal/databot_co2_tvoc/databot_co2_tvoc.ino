@@ -69,7 +69,6 @@ void loop() {
   float relhumidity = shtc3.toPercent();
   float abshumidity = RHtoAbsolute(relhumidity,temperature);
 
-  sgp30.setHumidity(doubleToFixedPoint(abshumidity));
   sgp30.measureAirQuality();
   float co2 = sgp30.CO2;
   float tvoc = sgp30.TVOC;
