@@ -1,6 +1,7 @@
 # Official Arduino Library for databot by aRbotics, LLC
 
 Learn about databot at https://databot.us.com
+
 Databot is an innovative STEM education product based on the open source Arduino
 platform. It is a small cube form factor, 42.5mm3, that contains 11 built in sensors for
 experimentation, plus ports for expansion. This library and the sketches within it have
