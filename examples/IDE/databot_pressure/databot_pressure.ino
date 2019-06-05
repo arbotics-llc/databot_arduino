@@ -12,7 +12,7 @@ void setup() {
   Wire.begin();
   Wire.setClock(I2Cclock);
 
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   setupMPL3115A2(barometer, PRESSURE);
 

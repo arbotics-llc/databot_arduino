@@ -27,7 +27,7 @@ void setup() {
   digitalWrite(A3, LOW);
   digitalWrite(13, LOW);
 
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   Serial.flush();
 

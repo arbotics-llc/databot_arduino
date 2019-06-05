@@ -28,7 +28,7 @@ void setup() {
   
   enableADCINT();
   
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   Serial.println(sizeof(FFT));
   Serial.println(sizeof(packet));

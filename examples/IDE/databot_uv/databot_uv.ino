@@ -11,7 +11,7 @@ void setup() {
   //setup i2c and set clock speed to 40khz
   Wire.begin();
   Wire.setClock(I2Cclock);
-  Serial.begin(115200);
+  Serial.begin(9600);
   
   setupVEML6075(uv);
 

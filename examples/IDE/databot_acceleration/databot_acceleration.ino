@@ -13,7 +13,7 @@ void setup() {
   Wire.begin();
   Wire.setClock(I2Cclock);
 
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   setupIMU(myIMU);
   

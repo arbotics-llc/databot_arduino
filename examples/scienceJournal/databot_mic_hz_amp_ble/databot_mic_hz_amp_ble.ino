@@ -29,7 +29,7 @@ void setup() {
   
   enableADCINT();
   
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   FlexiTimer2::set(1, 1.0/samplingFrequency, startADCRead); // *samplingFrequency* hz
   FlexiTimer2::start();
