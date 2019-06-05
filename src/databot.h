@@ -164,13 +164,11 @@ void sendPacket(DynamicJsonDocument &packet){
   int i = 0;
   int j = 0;
   Serial.print(packetstart);
-  delay(60);
   for(i = 0; i < buf_size; i++){
     Serial.print(msgpacketbuf[i]);
     j++;
     if(j == 20){
       j=0;
-      delay(60);
     }
   }
 }
