@@ -37,14 +37,14 @@ void setup() {
   Serial.flush();
 
   //open our log file and begin writing
-  myLog.append(myfile);
+  /*myLog.append(myfile);
   long sizeOfFile = myLog.size(myfile);
   myLog.append(myfile);
   myLog.println(F(""));
   myLog.println(F("--------------------------------------------"));
   myLog.println(F("--------New Data Bot Logging Session--------"));
   myLog.println(F("--------------------------------------------"));
-  myLog.syncFile();
+  myLog.syncFile();*/
 
   delay(1000);
 
@@ -68,7 +68,7 @@ void loop() {
     packet[F("time")] = millis();
     
     sendPacket(packet);
-    logData(myLog, packet);
+    //logData(myLog, packet);
 
     //delay until we reach our desired loop time
     while(millis() < loopStartTime + loopDesiredPeriodMillis)

@@ -26,6 +26,7 @@ This program is free software: you can redistribute it and/or modify
 #include "libs/FlexiTimer2.h"
 #include "libs/DallasTemperature.h"
 #include "libs/LowPower.h"
+#include "libs/NewTone.h"
 
 #define MPU9250_ADDRESS MPU9250_ADDRESS_AD1
 
