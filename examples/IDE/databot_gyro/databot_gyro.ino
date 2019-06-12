@@ -4,7 +4,7 @@
 #define I2Cclock 400000
 #define I2Cport Wire
 
-MPU9250 myIMU(MPU9250_ADDRESS, I2Cport, I2Cclock);
+MPU9250_DMP myIMU;
 
 // the setup function runs once when you press reset or power the board
 void setup() {
@@ -14,7 +14,7 @@ void setup() {
 
   Serial.begin(9600);
 
-  setupIMU(myIMU);
+  setupIMU(myIMU, 4, 1000, 50, 10);
   
   Serial.flush();
 
@@ -24,16 +24,14 @@ void setup() {
 
 // the loop function runs over and over again forever
 void loop() {
+
+  updateImu(myIMU);
   
-  updateImuAcceleration(myIMU);
-  updateImuGyro(myIMU);
-  updateImuMag(myIMU);
-  
-  Serial.print(myIMU.gx);
+  Serial.print(myIMU.calcGyro(myIMU.gx));
   Serial.print(",");
-  Serial.print(myIMU.gy);
+  Serial.print(myIMU.calcGyro(myIMU.gy));
   Serial.print(",");
-  Serial.println(myIMU.gz);
+  Serial.println(myIMU.calcGyro(myIMU.gz));
 
   //wait for serial to finish then sleep for 15 milliseconds every loop
   Serial.flush();

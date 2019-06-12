@@ -4,12 +4,10 @@ This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
@@ -75,7 +73,7 @@ void setupIMU(MPU9250 &imu){
     // Calibrate gyro and accelerometers, load biases in bias registers
     imu.calibrateMPU9250(imu.gyroBias, imu.accelBias);
     
-    imu.initMPU9250();
+    imu.initMPU9250(imu.AFS_8G, imu.GFS_1000DPS);
     // Read the WHO_AM_I register of the magnetometer, this is a good test of
     // communication
     byte d = imu.readByte(AK8963_ADDRESS, WHO_AM_I_AK8963);
@@ -86,7 +84,7 @@ void setupIMU(MPU9250 &imu){
       Serial.flush();
     }
     // Get magnetometer calibration from AK8963 ROM
-    imu.initAK8963(imu.factoryMagCalibration);
+    imu.initAK8963(imu.factoryMagCalibration, imu.MFS_14BITS);
     // Initialize device for active mode read of magnetometer
 
     imu.getAres();

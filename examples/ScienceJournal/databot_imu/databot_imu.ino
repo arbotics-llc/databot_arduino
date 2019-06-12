@@ -4,7 +4,7 @@
 #define I2Cclock 400000
 #define I2Cport Wire
 
-MPU9250 myIMU(MPU9250_ADDRESS, I2Cport, I2Cclock);
+MPU9250_DMP myIMU;
 
 OpenLog myLog;
 String myfile = "imusensordata.txt";
@@ -31,7 +31,7 @@ void setup() {
 
   Serial.begin(9600);
 
-  setupIMU(myIMU);
+  setupIMU(myIMU, 4, 1000, 4, 4);
   
   Serial.flush();
 
@@ -54,24 +54,19 @@ void setup() {
 void loop() {
   
   loopStartTime = millis();
-  digitalWrite(A3, LOW);
-  digitalWrite(13, LOW);
 
-  updateImuAcceleration(myIMU);
-  updateImuGyro(myIMU);
-  updateImuMag(myIMU);
+  updateImu(myIMU);
   
   //update our json packet with our new sensor values
-
-  packet[F("a.x")] = myIMU.ax;
-  packet[F("a.y")] = myIMU.ay;
-  packet[F("a.z")] = myIMU.az;
-  packet[F("g.x")] = myIMU.gx;
-  packet[F("g.y")] = myIMU.gy;
-  packet[F("g.z")] = myIMU.gz;
-  packet[F("m.x")] = myIMU.mx;
-  packet[F("m.y")] = myIMU.my;
-  packet[F("m.z")] = myIMU.mz;
+  packet[F("a.x")] = myIMU.calcAccel(myIMU.ax);
+  packet[F("a.y")] = myIMU.calcAccel(myIMU.ay);
+  packet[F("a.z")] = myIMU.calcAccel(myIMU.az);
+  packet[F("g.x")] = myIMU.calcGyro(myIMU.gx);
+  packet[F("g.y")] = myIMU.calcGyro(myIMU.gy); 
+  packet[F("g.z")] = myIMU.calcGyro(myIMU.gz);
+  packet[F("m.x")] = myIMU.calcMag(myIMU.mx);
+  packet[F("m.y")] = myIMU.calcMag(myIMU.my);
+  packet[F("m.z")] = myIMU.calcMag(myIMU.mz);
   packet[F("time")] = millis();
   
   sendPacket(packet);

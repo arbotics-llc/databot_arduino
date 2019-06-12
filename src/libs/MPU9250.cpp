@@ -180,8 +180,9 @@ void MPU9250::updateTime()
   sumCount++;
 }
 
-void MPU9250::initAK8963(float * destination)
+void MPU9250::initAK8963(float * destination, uint8_t mscale)
 {
+  MPU9250::Mscale = mscale;
   // First extract the factory calibration for each magnetometer axis
   uint8_t rawData[3];  // x/y/z gyro calibration data stored here
   // TODO: Test this!! Likely doesn't work
@@ -206,7 +207,7 @@ void MPU9250::initAK8963(float * destination)
   // 0010 for 8 Hz and 0110 for 100 Hz sample rates.
 
   // Set magnetometer data resolution and sample ODR
-  writeByte(AK8963_ADDRESS, AK8963_CNTL, Mscale << 4 | Mmode);
+  writeByte(AK8963_ADDRESS, AK8963_CNTL, mscale << 4 | Mmode);
   delay(10);
 
   if(_csPin != NOT_SPI)
@@ -215,8 +216,10 @@ void MPU9250::initAK8963(float * destination)
   }
 }
 
-void MPU9250::initMPU9250()
+void MPU9250::initMPU9250(uint8_t ascale, uint8_t gscale)
 {
+  MPU9250::Ascale = ascale;
+  MPU9250::Gscale = gscale;
   // wake up device
   // Clear sleep mode bit (6), enable all sensors
   writeByte(_I2Caddr, PWR_MGMT_1, 0x00);
@@ -251,7 +254,7 @@ void MPU9250::initMPU9250()
   // c = c & ~0xE0; // Clear self-test bits [7:5]
   c = c & ~0x02; // Clear Fchoice bits [1:0]
   c = c & ~0x18; // Clear AFS bits [4:3]
-  c = c | Gscale << 3; // Set full scale range for the gyro
+  c = c | gscale << 3; // Set user supplied scale range for the gyro
   // Set Fchoice for the gyro to 11 by writing its inverse to bits 1:0 of
   // GYRO_CONFIG
   // c =| 0x00;
@@ -263,7 +266,7 @@ void MPU9250::initMPU9250()
   c = readByte(_I2Caddr, ACCEL_CONFIG);
   // c = c & ~0xE0; // Clear self-test bits [7:5]
   c = c & ~0x18;  // Clear AFS bits [4:3]
-  c = c | Ascale << 3; // Set full scale range for the accelerometer
+  c = c | ascale << 3; // Set user supplied scale range for the accelerometer
   // Write new ACCEL_CONFIG register value
   writeByte(_I2Caddr, ACCEL_CONFIG, c);
 

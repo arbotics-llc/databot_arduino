@@ -73,7 +73,7 @@ DallasTemperature tempsensor(&oneWire);
 #endif
 
 #ifdef IMU
-MPU9250 myIMU(MPU9250_ADDRESS, I2Cport, I2Cclock);
+MPU9250_DMP myIMU;
 #endif
 
 #ifdef UV
@@ -149,15 +149,15 @@ void handleIMU(){
   #ifdef IMU
     packet.clear();
     
-    packet[F("a.x")] = myIMU.ax;
-    packet[F("a.y")] = myIMU.ay;
-    packet[F("a.z")] = myIMU.az;
-    packet[F("g.x")] = myIMU.gx;
-    packet[F("g.y")] = myIMU.gy; 
-    packet[F("g.z")] = myIMU.gz;
-    packet[F("m.x")] = myIMU.mx;
-    packet[F("m.y")] = myIMU.my;
-    packet[F("m.z")] = myIMU.mz;
+    packet[F("a.x")] = myIMU.calcAccel(myIMU.ax);
+    packet[F("a.y")] = myIMU.calcAccel(myIMU.ay);
+    packet[F("a.z")] = myIMU.calcAccel(myIMU.az);
+    packet[F("g.x")] = myIMU.calcGyro(myIMU.gx);
+    packet[F("g.y")] = myIMU.calcGyro(myIMU.gy); 
+    packet[F("g.z")] = myIMU.calcGyro(myIMU.gz);
+    packet[F("m.x")] = myIMU.calcMag(myIMU.mx);
+    packet[F("m.y")] = myIMU.calcMag(myIMU.my);
+    packet[F("m.z")] = myIMU.calcMag(myIMU.mz);
     packet[F("time")] = millis();
   
     #ifdef IDE
@@ -264,9 +264,7 @@ void updateSensors() {
   #endif
 
   #ifdef IMU
-  updateImuAcceleration(myIMU);
-  updateImuGyro(myIMU);
-  updateImuMag(myIMU);
+  updateImu(myIMU);
   #endif
 
   #ifdef UV
@@ -318,7 +316,13 @@ void setupSensors() {
   #endif
 
   #ifdef IMU
-  setupIMU(myIMU);
+    #ifdef IDE
+      setupIMU(myIMU, 4, 1000, 50, 50);
+    #endif
+
+    #ifdef GSJ
+      setupIMU(myIMU, 4, 1000, 4, 4);
+    #endif
   #endif
 
   #ifdef UV

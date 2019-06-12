@@ -223,12 +223,13 @@ class MPU9250
 
     uint32_t _interfaceSpeed;				// Stores the desired I2C or SPi clock rate
 
+    //these are now set in initMPU9250 and initAK8963
     // TODO: Add setter methods for this hard coded stuff
     // Specify sensor full scale
-    uint8_t Gscale = GFS_250DPS;
-    uint8_t Ascale = AFS_2G;
+    uint8_t Gscale = 0;
+    uint8_t Ascale = 0;
     // Choose either 14-bit or 16-bit magnetometer resolution
-    uint8_t Mscale = MFS_16BITS;
+    uint8_t Mscale = 0;
 
     // 2 for 8 Hz, 6 for 100 Hz continuous magnetometer data read
     uint8_t Mmode = M_8HZ;
@@ -290,8 +291,8 @@ public:
     void readMagData(int16_t *);
     int16_t readTempData();
     void updateTime();
-    void initAK8963(float *);
-    void initMPU9250();
+    void initAK8963(float *, uint8_t);
+    void initMPU9250(uint8_t, uint8_t);
     void calibrateMPU9250(float * gyroBias, float * accelBias);
     void MPU9250SelfTest(float * destination);
     void magCalMPU9250(float * dest1, float * dest2);
