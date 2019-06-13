@@ -64,9 +64,9 @@ void loop() {
     //update our json packet with our new sensor values
     
     packet[F("lumens")] = lumflux;
-    packet[F("uv a")] = uva;
-    packet[F("uv b")] = uvb;
-    packet[F("uv index")] = uvindex;
+    packet[F("UV A")] = uva;
+    packet[F("UV B")] = uvb;
+    packet[F("UV Index")] = uvindex;
     packet[F("time")] = millis();
     
     sendPacket(packet);

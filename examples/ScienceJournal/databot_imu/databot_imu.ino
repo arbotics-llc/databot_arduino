@@ -4,7 +4,11 @@
 #define I2Cclock 400000
 #define I2Cport Wire
 
-MPU9250_DMP myIMU;
+#define accel_range MPU9250::AFS_4G //AFS_2G, AFS_4G, AFS_8G, AFS_16G
+#define gyro_range MPU9250::GFS_1000DPS //GFS_250DPS, GFS_500DPS, GFS_1000DPS, GFS_2000DPS
+#define mag_range MPU9250::MFS_15BITS //MFS_14BITS, MFS_16BITS
+
+MPU9250 myIMU(MPU9250_ADDRESS, I2Cport, I2Cclock);
 
 OpenLog myLog;
 String myfile = "imusensordata.txt";
@@ -31,7 +35,7 @@ void setup() {
 
   Serial.begin(9600);
 
-  setupIMU(myIMU, 4, 1000, 4, 4);
+  setupIMU(myIMU, accel_range, gyro_range, mag_range);
   
   Serial.flush();
 

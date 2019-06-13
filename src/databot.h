@@ -35,9 +35,9 @@ void updateImuAcceleration(MPU9250 &imu){
   
       // Now we'll calculate the accleration value into actual g's
       // This depends on scale being set
-      imu.ax = (float)imu.accelCount[0] * imu.aRes * 1000; // - imu.accelBias[0];
-      imu.ay = (float)imu.accelCount[1] * imu.aRes * 1000; // - imu.accelBias[1];
-      imu.az = (float)imu.accelCount[2] * imu.aRes * 1000; // - imu.accelBias[2];
+      imu.ax = (float)imu.accelCount[0] * imu.aRes;// - imu.accelBias[0];
+      imu.ay = (float)imu.accelCount[1] * imu.aRes;// - imu.accelBias[1];
+      imu.az = (float)imu.accelCount[2] * imu.aRes;// - imu.accelBias[2];
     }
 }
 
@@ -62,18 +62,32 @@ void updateImuMag(MPU9250 &imu){
                * imu.factoryMagCalibration[2] - imu.magBias[2];
 }
 
-
-void setupIMU(MPU9250 &imu){
+//afs_opt = 0 //AFS_2G
+//gfs_opt = 0 //GFS_250DPS
+//mfs_opt = 0 //MFS_14BITS
+void setupIMU(MPU9250 &imu, uint8_t afs_opt = 0, uint8_t gfs_opt = 0, uint8_t mfs_opt = 0){
   byte c = imu.readByte(MPU9250_ADDRESS, WHO_AM_I_MPU9250);
 
   if (c == 0x71) // WHO_AM_I should always be 0x71
   {
     // Start by performing self test and reporting values
     imu.MPU9250SelfTest(imu.selfTest);
+        Serial.print(F("x-axis self test: acceleration trim within : "));
+    Serial.print(imu.selfTest[0],1); Serial.println("% of factory value");
+    Serial.print(F("y-axis self test: acceleration trim within : "));
+    Serial.print(imu.selfTest[1],1); Serial.println("% of factory value");
+    Serial.print(F("z-axis self test: acceleration trim within : "));
+    Serial.print(imu.selfTest[2],1); Serial.println("% of factory value");
+    Serial.print(F("x-axis self test: gyration trim within : "));
+    Serial.print(imu.selfTest[3],1); Serial.println("% of factory value");
+    Serial.print(F("y-axis self test: gyration trim within : "));
+    Serial.print(imu.selfTest[4],1); Serial.println("% of factory value");
+    Serial.print(F("z-axis self test: gyration trim within : "));
+    Serial.print(imu.selfTest[5],1); Serial.println("% of factory value");
     // Calibrate gyro and accelerometers, load biases in bias registers
-    imu.calibrateMPU9250(imu.gyroBias, imu.accelBias);
+    //imu.calibrateMPU9250(imu.gyroBias, imu.accelBias);
     
-    imu.initMPU9250(imu.AFS_8G, imu.GFS_1000DPS);
+    imu.initMPU9250(afs_opt, gfs_opt);
     // Read the WHO_AM_I register of the magnetometer, this is a good test of
     // communication
     byte d = imu.readByte(AK8963_ADDRESS, WHO_AM_I_AK8963);
@@ -84,7 +98,7 @@ void setupIMU(MPU9250 &imu){
       Serial.flush();
     }
     // Get magnetometer calibration from AK8963 ROM
-    imu.initAK8963(imu.factoryMagCalibration, imu.MFS_14BITS);
+    imu.initAK8963(imu.factoryMagCalibration, mfs_opt);
     // Initialize device for active mode read of magnetometer
 
     imu.getAres();

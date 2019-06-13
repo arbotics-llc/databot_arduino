@@ -64,7 +64,6 @@ void loop() {
     //update our json packet with our new sensor values
     
     packet[F("altitude")] = smoothAltitude;
-    packet[F("altraw")] = rawAltitude; 
     packet[F("time")] = millis();
     
     sendPacket(packet);

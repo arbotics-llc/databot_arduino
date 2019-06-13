@@ -37,6 +37,10 @@
 //uncomment below to enable the MPU9250 intertial measurement unit
 #define IMU
 
+#define accel_range MPU9250::AFS_4G //AFS_2G, AFS_4G, AFS_8G, AFS_16G
+#define gyro_range MPU9250::GFS_1000DPS //GFS_250DPS, GFS_500DPS, GFS_1000DPS, GFS_2000DPS
+#define mag_range MPU9250::MFS_16BITS //MFS_14BITS, MFS_16BITS
+
 //uncomment below to enable the VEML6075 ultraviolet sensor
 #define UV
 
@@ -73,7 +77,7 @@ DallasTemperature tempsensor(&oneWire);
 #endif
 
 #ifdef IMU
-MPU9250_DMP myIMU;
+MPU9250 myIMU(MPU9250_ADDRESS, I2Cport, I2Cclock);
 #endif
 
 #ifdef UV
@@ -149,15 +153,15 @@ void handleIMU(){
   #ifdef IMU
     packet.clear();
     
-    packet[F("a.x")] = myIMU.calcAccel(myIMU.ax);
-    packet[F("a.y")] = myIMU.calcAccel(myIMU.ay);
-    packet[F("a.z")] = myIMU.calcAccel(myIMU.az);
-    packet[F("g.x")] = myIMU.calcGyro(myIMU.gx);
-    packet[F("g.y")] = myIMU.calcGyro(myIMU.gy); 
-    packet[F("g.z")] = myIMU.calcGyro(myIMU.gz);
-    packet[F("m.x")] = myIMU.calcMag(myIMU.mx);
-    packet[F("m.y")] = myIMU.calcMag(myIMU.my);
-    packet[F("m.z")] = myIMU.calcMag(myIMU.mz);
+    packet[F("a.x")] = myIMU.ax;
+    packet[F("a.y")] = myIMU.ay;
+    packet[F("a.z")] = myIMU.az;
+    packet[F("g.x")] = myIMU.gx;
+    packet[F("g.y")] = myIMU.gy; 
+    packet[F("g.z")] = myIMU.gz;
+    packet[F("m.x")] = myIMU.mx;
+    packet[F("m.y")] = myIMU.my;
+    packet[F("m.z")] = myIMU.mz;
     packet[F("time")] = millis();
   
     #ifdef IDE
@@ -193,11 +197,11 @@ void updateJson() {
   #ifdef BAROMETER 
 
     #ifdef READALTITUDE
-    packet[F("alt")] = smoothAltitude;
+    packet[F("altitude")] = smoothAltitude;
     #endif
 
     #ifdef READPRESSURE
-    packet[F("pres")] = smoothPressure;
+    packet[F("pressure")] = smoothPressure;
     #endif
 
   #endif
@@ -216,7 +220,7 @@ void updateJson() {
 
   #ifdef EXTERNAL_TEMP
   tempsensor.requestTemperatures();
-  packet[F("temp")] = tempsensor.getTempCByIndex(0);
+  packet[F("temperature")] = tempsensor.getTempCByIndex(0);
   #endif
 
   #ifdef UV
@@ -228,7 +232,7 @@ void updateJson() {
   #endif
 
   #ifdef LIGHT
-  packet[F("lum")] = apds.readLuxLevel();
+  packet[F("lumens")] = apds.readLuxLevel();
   #endif
 
   packet[F("time")] = millis();
@@ -264,7 +268,9 @@ void updateSensors() {
   #endif
 
   #ifdef IMU
-  updateImu(myIMU);
+  updateImuAcceleration(myIMU);
+  updateImuGyro(myIMU);
+  updateImuMag(myIMU);
   #endif
 
   #ifdef UV
@@ -317,11 +323,11 @@ void setupSensors() {
 
   #ifdef IMU
     #ifdef IDE
-      setupIMU(myIMU, 4, 1000, 50, 50);
+      setupIMU(myIMU, accel_range, gyro_range, mag_range);
     #endif
 
     #ifdef GSJ
-      setupIMU(myIMU, 4, 1000, 4, 4);
+      setupIMU(myIMU, accel_range, gyro_range, mag_range);
     #endif
   #endif
 
