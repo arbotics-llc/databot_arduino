@@ -6,7 +6,7 @@
 
 #define accel_range MPU9250::AFS_4G //AFS_2G, AFS_4G, AFS_8G, AFS_16G
 #define gyro_range MPU9250::GFS_1000DPS //GFS_250DPS, GFS_500DPS, GFS_1000DPS, GFS_2000DPS
-#define mag_range MPU9250::MFS_15BITS //MFS_14BITS, MFS_16BITS
+#define mag_range MPU9250::MFS_16BITS //MFS_14BITS, MFS_16BITS
 
 MPU9250 myIMU(MPU9250_ADDRESS, I2Cport, I2Cclock);
 
@@ -35,7 +35,7 @@ void setup() {
 
   Serial.begin(9600);
 
-  setupIMU(myIMU, accel_range, gyro_range, mag_range);
+  setupIMU(myIMU, 255, accel_range, gyro_range, mag_range);
   
   Serial.flush();
 
@@ -59,7 +59,9 @@ void loop() {
   
   loopStartTime = millis();
 
-  updateImu(myIMU);
+  updateImuAcceleration(myIMU);
+  updateImuGyro(myIMU);
+  updateImuMag(myIMU);
   
   //update our json packet with our new sensor values
   packet[F("a.x")] = myIMU.calcAccel(myIMU.ax);

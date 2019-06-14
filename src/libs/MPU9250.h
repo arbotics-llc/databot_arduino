@@ -292,7 +292,7 @@ public:
     int16_t readTempData();
     void updateTime();
     void initAK8963(float *, uint8_t);
-    void initMPU9250(uint8_t, uint8_t);
+    void initMPU9250(uint8_t, uint8_t, uint8_t);
     void calibrateMPU9250(float * gyroBias, float * accelBias);
     void MPU9250SelfTest(float * destination);
     void magCalMPU9250(float * dest1, float * dest2);

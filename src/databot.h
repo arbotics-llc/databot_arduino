@@ -62,10 +62,11 @@ void updateImuMag(MPU9250 &imu){
                * imu.factoryMagCalibration[2] - imu.magBias[2];
 }
 
+//sample_rate = 47 //anywhere from 0x00 to 0xFF, output rate = 1khz/(1+sample_rate), 47 should give us ~20hz, 0x00 gives 1khz, 0xFF gives ~4hz 
 //afs_opt = 0 //AFS_2G
 //gfs_opt = 0 //GFS_250DPS
 //mfs_opt = 0 //MFS_14BITS
-void setupIMU(MPU9250 &imu, uint8_t afs_opt = 0, uint8_t gfs_opt = 0, uint8_t mfs_opt = 0){
+void setupIMU(MPU9250 &imu, uint8_t sample_rate = 47, uint8_t afs_opt = 0, uint8_t gfs_opt = 0, uint8_t mfs_opt = 0){
   byte c = imu.readByte(MPU9250_ADDRESS, WHO_AM_I_MPU9250);
 
   if (c == 0x71) // WHO_AM_I should always be 0x71
@@ -87,7 +88,7 @@ void setupIMU(MPU9250 &imu, uint8_t afs_opt = 0, uint8_t gfs_opt = 0, uint8_t mf
     // Calibrate gyro and accelerometers, load biases in bias registers
     //imu.calibrateMPU9250(imu.gyroBias, imu.accelBias);
     
-    imu.initMPU9250(afs_opt, gfs_opt);
+    imu.initMPU9250(afs_opt, gfs_opt, sample_rate);
     // Read the WHO_AM_I register of the magnetometer, this is a good test of
     // communication
     byte d = imu.readByte(AK8963_ADDRESS, WHO_AM_I_AK8963);

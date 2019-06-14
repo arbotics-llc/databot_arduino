@@ -216,7 +216,7 @@ void MPU9250::initAK8963(float * destination, uint8_t mscale)
   }
 }
 
-void MPU9250::initMPU9250(uint8_t ascale, uint8_t gscale)
+void MPU9250::initMPU9250(uint8_t ascale, uint8_t gscale, uint8_t sample_rate)
 {
   MPU9250::Ascale = ascale;
   MPU9250::Gscale = gscale;
@@ -243,7 +243,7 @@ void MPU9250::initMPU9250(uint8_t ascale, uint8_t gscale)
   // Set sample rate = gyroscope output rate/(1 + SMPLRT_DIV)
   // Use a 200 Hz rate; a rate consistent with the filter update rate
   // determined inset in CONFIG above.
-  writeByte(_I2Caddr, SMPLRT_DIV, 0x04);
+  writeByte(_I2Caddr, SMPLRT_DIV, sample_rate);
 
   // Set gyroscope full scale range
   // Range selects FS_SEL and AFS_SEL are 0 - 3, so 2-bit values are

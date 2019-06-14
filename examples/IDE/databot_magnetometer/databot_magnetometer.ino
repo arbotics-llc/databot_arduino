@@ -18,7 +18,7 @@ void setup() {
 
   Serial.begin(9600);
 
-  setupIMU(myIMU, accel_range, gyro_range, mag_range);
+  setupIMU(myIMU, 50, accel_range, gyro_range, mag_range);
   
   Serial.flush();
 

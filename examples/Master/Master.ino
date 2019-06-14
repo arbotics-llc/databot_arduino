@@ -323,11 +323,11 @@ void setupSensors() {
 
   #ifdef IMU
     #ifdef IDE
-      setupIMU(myIMU, accel_range, gyro_range, mag_range);
+      setupIMU(myIMU, 255, accel_range, gyro_range, mag_range);
     #endif
 
     #ifdef GSJ
-      setupIMU(myIMU, accel_range, gyro_range, mag_range);
+      setupIMU(myIMU, 255, accel_range, gyro_range, mag_range);
     #endif
   #endif
 
