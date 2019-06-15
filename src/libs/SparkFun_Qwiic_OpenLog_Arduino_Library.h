@@ -140,6 +140,7 @@ class OpenLog : public Print {
     int32_t size(String fileName); //Given a file name, read the size of the file
 
     void read(uint8_t* userBuffer, uint16_t bufferSize, String fileName); //Read the contents of a file into the provided buffer
+    void readContinuous(int32_t, String, void(uint16_t,uint8_t*));
 
     boolean searchDirectory(String options); //Search the current directory for a given wildcard
     String getNextDirectoryItem(); //Return the next file or directory from the search
