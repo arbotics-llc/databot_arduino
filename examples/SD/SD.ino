@@ -1,5 +1,16 @@
 #include <databot.h>
 
+//for now set Serial monitor to no line ending, selection to the left of
+//baud selection
+
+//TODO
+//handle multiple characters, new line, carriage return, and nlcr properly
+//add deletion of files (files should probably be printed to screen then
+//  deleted in case deletion is by accident
+//check to see if we can clear serial monitor by ASCII char from databot
+//build up hierarchical file system
+//estimate file time
+
 OpenLog myLog; //Create instance
 
 long totalSize = 0;
@@ -13,70 +24,7 @@ void setup()
   //note, 9600 takes a while for long files... 115200 may be better here
   Serial.begin(115200); //9600bps is used for debug statements
   Serial.println("OpenLog Read File Test");
-
-  //Record something to the default log
-  myLog.println("OpenLog Read File Test");
-
-  String myFile = "imusensoz.txt";
-
-  myLog.removeFile(myFile);
-
-  //Get size of file
-  int32_t sizeOfFile = myLog.size(myFile);
-  if (sizeOfFile == -1) //File does not exist. Create it.
-  {
-    Serial.println(F("File not found, creating one..."));
-
-    myLog.append(myFile); //Create file and begin writing to it
-
-    //Write a random number of random characters to this new file
-    myLog.println("The Beginning");
-    randomSeed(analogRead(A0));
-
-    //Write 300 to 500 random characters to the file
-    int charsToWrite = random(10000, 20000);
-    for (int x = 0 ; x < charsToWrite ; x++)
-    {
-      byte myCharacter = random('a', 'z'); //Pick a random letter, a to z
-      //line breaks, yo
-      if(x%80 == 0){
-        myCharacter = '\n';
-      }
-
-      myLog.write(myCharacter);
-    }
-    myLog.println();
-    myLog.println("The End");
-    myLog.syncFile();
-  }
-  else
-  {
-    Serial.println("File found!");
-  }
-
-  //Get size of file
-  sizeOfFile = myLog.size(myFile);
-
-  if (sizeOfFile > -1)
-  {
-    Serial.print(F("Size of file: "));
-    Serial.println(sizeOfFile);
-
-    //Read the contents of myFile by passing a buffer into .read()
-    //Then printing the contents of that buffer
-    int32_t myBufferSize = 0;
-    byte myBuffer[myBufferSize];
-    //myLog.read(myBuffer, myBufferSize, myFile, 4); //Doesn't yet work
-    myLog.readContinuous(sizeOfFile, myFile, i2cBuffHandler); //Load myBuffer with contents of myFile
-    Serial.println("\nDone with file contents");
-  }
-  else
-  {
-    Serial.println(F("Size error: File not found"));
-  }
-
-  Serial.println(F("Done!"));
-
+  
   //first get rid of all those LOG****.TXT files that get generated from somewhere
   Serial.print("Removed files:");
   Serial.println(myLog.removeFile("LOG*.TXT"));
@@ -132,13 +80,13 @@ void setup()
   Serial.println(userinput);
 
   String currFile = "";
+  int sizeOfFile = -1;
   int j = 0;
   for(int i = 0; i < fileList.length(); i++){
     char c = fileList[i];
     if(c != '\n'){
       currFile += c;
     }else{
-      j++;
       if(j == userinput){
       Serial.print("file ");
       Serial.print(j);
@@ -150,6 +98,7 @@ void setup()
       Serial.println(sizeOfFile);
       myLog.readContinuous(sizeOfFile, currFile, i2cBuffHandler);
       }
+      j++;
       currFile = "";
     }
   }
