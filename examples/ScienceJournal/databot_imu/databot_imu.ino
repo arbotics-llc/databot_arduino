@@ -64,15 +64,15 @@ void loop() {
   updateImuMag(myIMU);
   
   //update our json packet with our new sensor values
-  packet[F("a.x")] = myIMU.calcAccel(myIMU.ax);
-  packet[F("a.y")] = myIMU.calcAccel(myIMU.ay);
-  packet[F("a.z")] = myIMU.calcAccel(myIMU.az);
-  packet[F("g.x")] = myIMU.calcGyro(myIMU.gx);
-  packet[F("g.y")] = myIMU.calcGyro(myIMU.gy); 
-  packet[F("g.z")] = myIMU.calcGyro(myIMU.gz);
-  packet[F("m.x")] = myIMU.calcMag(myIMU.mx);
-  packet[F("m.y")] = myIMU.calcMag(myIMU.my);
-  packet[F("m.z")] = myIMU.calcMag(myIMU.mz);
+  packet[F("a.x")] = myIMU.ax;
+  packet[F("a.y")] = myIMU.ay;
+  packet[F("a.z")] = myIMU.az;
+  packet[F("g.x")] = myIMU.gx;
+  packet[F("g.y")] = myIMU.gy; 
+  packet[F("g.z")] = myIMU.gz;
+  packet[F("m.x")] = myIMU.mx;
+  packet[F("m.y")] = myIMU.my;
+  packet[F("m.z")] = myIMU.mz;
   packet[F("time")] = millis();
   
   sendPacket(packet);

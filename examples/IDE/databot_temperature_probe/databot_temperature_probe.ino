@@ -23,8 +23,7 @@ void setup() {
 // the loop function runs over and over again forever
 void loop() {
 
-  tempsensor.requestTemperatures();
-  float temperature = tempsensor.getTempCByIndex(0);
+  float temperature = getExternalTemperature(tempsensor);
 
   Serial.println(temperature);
 

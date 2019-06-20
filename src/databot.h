@@ -52,8 +52,12 @@ bool setupVEML6075(VEML6075 &uv);
 double RHtoAbsolute(float relHumidity, float tempC);
 uint16_t doubleToFixedPoint( double number);
 
+//DS18B20 external temperature sensor helper function
+float getExternalTemperature(DallasTemperature &tempsensor);
+
 //bluetooth low energy and logging communication helper functions
 void sendPacket(DynamicJsonDocument &packet);
 void logData(OpenLog &myLog, DynamicJsonDocument &packet);
+void logData(OpenLog &myLog, const String &string);
 
 #endif

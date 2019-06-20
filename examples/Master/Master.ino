@@ -3,8 +3,11 @@
 #define I2Cclock 400000
 #define I2Cport Wire
 
+//give your current altitude in meters from sea level to get more accurate readings
+#define CURRENT_ALTITUDE 0 
+
 //uncomment below to communicated with IDE over serial
-#define IDE
+//#define IDE
 
 //either communicate over serial with arduino ide or with science journal with BLE
 //doing both would take too much time...
@@ -14,16 +17,13 @@
 #endif
 
 //uncomment below to store data to sd card
-//#define SDCARD
+#define SDCARD
 
 //uncomment below to enable the 3115A2 altitude/pressure sensor
 #define BAROMETER 
 //uncomment one of the two below to enable pressure sensor or altitude sensor
 #define READALTITUDE
 //#define READPRESSURE
-
-//give your current altitude in meters from sea level to get more accurate readings
-#define CURRENT_ALTITUDE 0 
 
 //uncomment below to enable the shtc3 humidity sensor
 #define HUMIDITY
@@ -48,11 +48,11 @@
 #define LIGHT
 
 //set to how often you want to grab sensor data in milliseconds
-#define LOOP_TIME_MS 1000
+#define LOOP_TIME_MS 100
 
 unsigned long loopStartTime = 0;
 
-String myfile = "sensors.txt";
+String myfile = "zipline.txt";
 DynamicJsonDocument packet(200);
 
 #ifdef BAROMETER
@@ -112,6 +112,7 @@ void setup() {
   myLog.println(F("--------------------------------------------"));
   myLog.println(F("--------New Data Bot Logging Session--------"));
   myLog.println(F("--------------------------------------------"));
+  myLog.println(generateCsvHeader());
   myLog.syncFile();
   #endif
 
@@ -120,14 +121,22 @@ void setup() {
 }
 
 
+int everyfourloops = 0;
+
 // the loop function runs over and over again forever
 void loop() {
     
     loopStartTime = millis();
     
     updateSensors();
-    handleIMU();
-    updateJson();
+    //handleIMU();
+    //updateJson();
+    #ifdef SDCARD
+    logData(myLog, generateCsvRecord());
+    #endif
+    /*everyfourloops++;
+    if(everyfourloops % 5 == 0){
+    everyfourloops = 0;
 
     #ifdef IDE
     ideJson();
@@ -140,7 +149,7 @@ void loop() {
     #ifdef SDCARD
     logData(myLog, packet);
     #endif
-
+    }*/
     //delay until we reach our desired loop time
     while(millis() < loopStartTime + LOOP_TIME_MS)
     {
@@ -232,7 +241,7 @@ void updateJson() {
   #endif
 
   #ifdef LIGHT
-  packet[F("lumens")] = apds.readLuxLevel();
+  packet[F("lux")] = apds.readLuxLevel();
   #endif
 
   packet[F("time")] = millis();
@@ -323,11 +332,17 @@ void setupSensors() {
 
   #ifdef IMU
     #ifdef IDE
-      setupIMU(myIMU, 255, accel_range, gyro_range, mag_range);
+      setupIMU(myIMU, 47, accel_range, gyro_range, mag_range);
     #endif
 
     #ifdef GSJ
-      setupIMU(myIMU, 255, accel_range, gyro_range, mag_range);
+      setupIMU(myIMU, 100, accel_range, gyro_range, mag_range);
+    #endif
+
+    #ifndef IDE
+      #ifndef GSJ
+        setupIMU(myIMU, 100, accel_range, gyro_range, mag_range);
+      #endif
     #endif
   #endif
 
@@ -339,4 +354,121 @@ void setupSensors() {
   setupApds(apds);
   #endif
 
+}
+
+String generateCsvHeader(){
+  String csvHeader = "";
+  #ifdef BAROMETER 
+
+    #ifdef READALTITUDE
+      csvHeader += ",altitude";
+    #endif
+
+    #ifdef READPRESSURE
+      csvHeader += ",pressure";
+    #endif
+  #endif
+
+  #ifdef HUMIDITY
+    csvHeader += ",humidity";
+  #endif
+
+  #ifdef AIR_QUALITY
+    csvHeader += ",CO2,TVOC";
+  #endif
+
+  #ifdef EXTERNAL_TEMP
+    csvHeader += ",temperature";
+  #endif
+
+  #ifdef IMU
+    csvHeader += ",a.x,a.y,a.z,g.x,g.y,g.z,m.x,m.y,m.z";
+  #endif
+
+  #ifdef UV
+    csvHeader += ",'UV A','UV B','UV Index'";
+  #endif
+
+  #ifdef LIGHT
+    csvHeader += ",lux";
+  #endif
+
+  csvHeader += ",time";
+
+  //if leading character is , replace with whitespace
+  if(csvHeader[0] == ','){
+    csvHeader[0] = ' ';
+  }
+  //remove leading and trailing whitespace
+  csvHeader.trim();
+
+  return csvHeader;
+
+}
+
+String generateCsvRecord(){
+  String csvRecord = "";
+  String comma = ",";
+  #ifdef BAROMETER 
+
+    #ifdef READALTITUDE
+    csvRecord += comma + smoothAltitude;
+    #endif
+
+    #ifdef READPRESSURE
+     csvRecord += comma + smoothPressure;
+    #endif
+
+  #endif
+
+  #ifdef HUMIDITY
+  shtc3.update();
+  shtc3.sleep(true);
+  csvRecord += comma + shtc3.toPercent();
+  #endif
+
+  #ifdef AIR_QUALITY
+  sgp30.measureAirQuality();
+  csvRecord += comma +   (float)sgp30.CO2;
+  csvRecord += comma +  (float)sgp30.TVOC;
+  #endif
+
+  #ifdef EXTERNAL_TEMP
+  csvRecord += comma + getExternalTemperature(tempsensor); 
+  #endif
+
+  #ifdef IMU
+  csvRecord += comma + myIMU.ax;
+  csvRecord += comma + myIMU.ay;
+  csvRecord += comma + myIMU.az;
+  csvRecord += comma + myIMU.gx;
+  csvRecord += comma + myIMU.gy; 
+  csvRecord += comma + myIMU.gz;
+  csvRecord += comma + myIMU.mx;
+  csvRecord += comma + myIMU.my;
+  csvRecord += comma + myIMU.mz;
+  #endif
+
+  #ifdef UV
+  float uva = uv.uva();
+  float uvb = uv.uvb();
+  csvRecord += comma +  uv.uva();
+  csvRecord += comma +   uv.uvb();
+  csvRecord += comma + uv.index( uva, uvb );
+  #endif
+
+  #ifdef LIGHT
+  csvRecord += comma + apds.readLuxLevel();
+  #endif
+
+  //csvRecord += comma + millis();
+
+  //if leading character is , replace with whitespace
+  if(csvRecord[0] == ','){
+    csvRecord[0] = ' ';
+  }
+  //remove leading and trailing whitespace
+  csvRecord.trim();
+
+  return csvRecord;
 }

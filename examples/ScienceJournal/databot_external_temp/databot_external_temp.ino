@@ -49,8 +49,7 @@ void setup() {
 // the loop function runs over and over again forever
 void loop() {
 
-  tempsensor.requestTemperatures();
-  float temperature = tempsensor.getTempCByIndex(0);
+  float temperature = getExternalTemperature(tempsensor);
 
   //update our json packet with our new sensor values
 
@@ -61,5 +60,6 @@ void loop() {
   //logData(myLog, packet);
 
   //Sleep 500 milliseconds second every loop
+  Serial.flush();
   LowPower.powerDown(SLEEP_500MS, ADC_OFF, BOD_OFF);
 }

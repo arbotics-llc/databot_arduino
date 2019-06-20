@@ -88,5 +88,6 @@ void loop() {
   //logData(myLog, packet);
 
   //Sleep for one second every loop
+  Serial.flush();
   LowPower.powerDown(SLEEP_1S, ADC_OFF, BOD_OFF);
 }

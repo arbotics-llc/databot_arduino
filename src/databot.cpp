@@ -186,7 +186,7 @@ void setupMPL3115A2(MPL3115A2 &barometer, int option){
   }else if(option == PRESSURE){
     barometer.setModeBarometer();
   }
-  barometer.setOversampleRate(4); // Set Oversample to the recommended 128
+  barometer.setOversampleRate(4); // Set Oversample to the recommended 16 samples, read takes 66ms
   barometer.enableEventFlags(); // Enable all three pressure and temp event flags
   delay(5000);
 }
@@ -282,6 +282,41 @@ uint16_t doubleToFixedPoint( double number) {
 }
 
 /*
+* Function getExternalTemperature
+* -------------------------------
+* reads temperature in celsius from the DS18B20 temperature probe
+*
+* usage note: will retry on first three failures
+*
+* arguments:
+* tempsensor: pointer to DallasTemperature object
+*
+* returns: on success returns temperature in Celsius, on failure returns
+* -127 
+*/
+float getExternalTemperature(DallasTemperature &tempsensor) {
+  float temperature; 
+
+
+  for( int i = 0; i < 3; i++ ) {
+
+   tempsensor.requestTemperatures();
+   temperature = tempsensor.getTempCByIndex(0);
+
+   if( temperature != -127 ) {
+
+     return temperature;
+
+   }
+   Serial.println("read failed");
+
+  }
+  
+  return temperature;
+
+}
+
+/*
 * Function sendPacket
 * converts JSON packet to Message pack and sends over serial to the HM19 bluetooth chip
 *
@@ -308,26 +343,28 @@ void sendPacket(DynamicJsonDocument &packet){
   int i = 0;
   int j = 0;
   Serial.print(packetstart);
-  delay(60);
   for(i = 0; i < buf_size; i++){
     Serial.print(msgpacketbuf[i]);
     j++;
-    if(j == 20){
+    if(j == 100){
       j=0;
       delay(60);
     }
   }
+  delay(60);
 
-  //a note on the delays, if we don't add the 60ms delay inbetween each 20 character write
-  //the hm19 tends to overwrite individual packets
+  //a note on the delays, if we don't add the 60ms delay inbetween each
+  //packet the hm19 tends to overwrite individual packets. 
+  //We go with a 100 byte packet assumption because that is a safe size 
+  //most phones should be able to safely negotiate
 }
 
 /*
 * Function logData
 * converts JSON packet and sends to the SD card over i2c to be stored 
 *
-* usage note: this function takes a fair amount of stack space, if your program starts acting
-* crazy this function or sendPacket are likely culprits.
+* usage note: this function takes a fair amount of stack space, if your program
+* starts acting crazy this function or sendPacket are likely culprits.
 *
 * arguments
 * myLog: pointer to OpenLog object
@@ -345,4 +382,20 @@ void logData(OpenLog &myLog, DynamicJsonDocument &packet) {
   myLog.syncFile();
 
   logoutputjson = "";
+}
+
+/*
+* Function logData
+* ----------------
+* writes a string to the SD card 
+*
+* arguments
+* myLog: pointer to OpenLog object
+* string: pointer to the string you wish log 
+*
+* returns void
+*/
+void logData(OpenLog &myLog, const String &string) {
+  myLog.println(string);
+  myLog.syncFile();
 }
