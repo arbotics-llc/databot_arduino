@@ -179,6 +179,31 @@ void OpenLog::read(uint8_t* userBuffer, uint16_t bufferSize, String fileName)
   }
 }
 
+void OpenLog::readContinuous(int32_t bytesToRead, String fileName, void(*i2cBuffHandlerFunc)(uint16_t,uint8_t*) ){
+  uint16_t spotInBuffer = 0;
+  int32_t leftToRead = bytesToRead;
+  sendCommand(registerMap.readFile, fileName);
+
+  uint8_t readBuffer[I2C_BUFFER_LENGTH];
+
+  while (leftToRead > 0)
+  {
+    memset(readBuffer, 0, sizeof(readBuffer));
+    spotInBuffer = 0;
+    uint8_t toGet = I2C_BUFFER_LENGTH;
+    if (leftToRead < toGet) toGet = leftToRead;
+
+    _i2cPort->requestFrom(_deviceAddress, toGet);
+    while (_i2cPort->available())
+      readBuffer[spotInBuffer++] = _i2cPort->read();
+
+    leftToRead -= toGet;
+
+    i2cBuffHandlerFunc(I2C_BUFFER_LENGTH, readBuffer);
+  }
+
+}
+
 //Read the contents of a directory. Wildcards allowed
 //Returns true if OpenLog ack'd. Use getNextDirectoryItem() to get the first item.
 boolean OpenLog::searchDirectory(String options)
