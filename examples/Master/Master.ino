@@ -461,7 +461,7 @@ String generateCsvRecord(){
   csvRecord += comma + apds.readLuxLevel();
   #endif
 
-  //csvRecord += comma + millis();
+  csvRecord += comma + millis();
 
   //if leading character is , replace with whitespace
   if(csvRecord[0] == ','){
