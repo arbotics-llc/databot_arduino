@@ -80,7 +80,7 @@ void setup()
   Serial.println(userinput);
 
   String currFile = "";
-  int sizeOfFile = -1;
+  int32_t sizeOfFile = -1;
   int j = 0;
   for(int i = 0; i < fileList.length(); i++){
     char c = fileList[i];
