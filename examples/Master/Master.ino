@@ -228,8 +228,7 @@ void updateJson() {
   #endif
 
   #ifdef EXTERNAL_TEMP
-  tempsensor.requestTemperatures();
-  packet[F("temperature")] = tempsensor.getTempCByIndex(0);
+  packet[F("temperature")] = getExternalTemperature(tempsensor);
   #endif
 
   #ifdef UV

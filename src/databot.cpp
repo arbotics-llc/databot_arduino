@@ -38,7 +38,7 @@ bool isImuReady(MPU9250 &imu){
 * Function updateImuAcceleration
 * ------------------------------
 * grabs new raw acceleromater data from MPU9250, calculates proper range and 
-* updates associated member variables
+ast delay* updates associated member variables
 *
 * usage note: only call this after isImuReady has returned true or you may get stale data
 *
@@ -308,7 +308,6 @@ float getExternalTemperature(DallasTemperature &tempsensor) {
      return temperature;
 
    }
-   Serial.println("read failed");
 
   }
   
@@ -337,9 +336,9 @@ void sendPacket(DynamicJsonDocument &packet){
   //to the Bluetooth Low Energy module
   char packetstart[] = "msgstart";
   
-  char msgpacketbuf[256];
-  memset(msgpacketbuf,0,256*sizeof(char));
-  size_t buf_size = serializeMsgPack(packet, msgpacketbuf);
+  char msgpacketbuf[120];
+  memset(msgpacketbuf,0,120*sizeof(char));
+  size_t buf_size = serializeMsgPack(packet, msgpacketbuf, 120*sizeof(char));
   int i = 0;
   int j = 0;
   Serial.print(packetstart);
@@ -352,7 +351,7 @@ void sendPacket(DynamicJsonDocument &packet){
     }
   }
   delay(60);
-
+  Serial.flush();
   //a note on the delays, if we don't add the 60ms delay inbetween each
   //packet the hm19 tends to overwrite individual packets. 
   //We go with a 100 byte packet assumption because that is a safe size 
