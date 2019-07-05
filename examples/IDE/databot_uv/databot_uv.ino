@@ -1,4 +1,3 @@
-#include <Wire.h>
 #include <databot.h>
 
 #define I2Cclock 400000

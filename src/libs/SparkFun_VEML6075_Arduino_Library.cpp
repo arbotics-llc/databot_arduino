@@ -119,7 +119,7 @@ VEML6075_error_t VEML6075::begin(TwoWire &wirePort)
     _i2cPort = &wirePort;
 
     #ifdef WIRE_HAS_END
-        _i2cPort->end();
+        //_i2cPort->end();
     #endif
     _i2cPort->begin();
 

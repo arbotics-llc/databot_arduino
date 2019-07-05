@@ -1,5 +1,4 @@
 #include <databot.h>
-#include <Wire.h>
 
 #define I2Cclock 400000
 #define I2Cport Wire

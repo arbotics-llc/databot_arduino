@@ -1,4 +1,4 @@
-#include<Wire.h>
+#include"Wire.h"
 #include "Sparkfun_APDS9301_Library.h"
 #include <Arduino.h>
 
@@ -149,19 +149,19 @@ float APDS9301::readLuxLevel()
     
     if ((ch1Int >= 5047) || (ch0Int >= 5047)) 
     {
-      return 1.0/0.0;
+      return -1;
     }
     break;
     case INT_TIME_101_MS:
     if ((ch1Int >= 37177) || (ch0Int >= 37177)) 
     {
-      return 1.0/0.0;
+      return -1;
     }
     break;
     case INT_TIME_402_MS:
     if ((ch1Int >= 65535) || (ch0Int >= 65535))
     { 
-      return 1.0/0.0;
+      return -1;
     }
     break;
   }

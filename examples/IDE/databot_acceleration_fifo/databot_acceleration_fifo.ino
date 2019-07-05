@@ -18,7 +18,7 @@ void setup() {
 
   Serial.begin(9600);
 
-  setupIMU(myIMU, 20, accel_range, gyro_range, mag_range);
+  setupIMU(myIMU, 50, accel_range, gyro_range, mag_range);
   
   Serial.flush();
 
@@ -39,6 +39,6 @@ void loop() {
 
   //wait for serial to finish then sleep for 15 milliseconds every loop
   Serial.flush();
-  delay(10);
+  LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
 
 }

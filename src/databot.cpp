@@ -56,6 +56,7 @@ void updateImuAcceleration(MPU9250 &imu){
     imu.ax = (float)imu.accelCount[0] * imu.aRes;// - imu.accelBias[0];
     imu.ay = (float)imu.accelCount[1] * imu.aRes;// - imu.accelBias[1];
     imu.az = (float)imu.accelCount[2] * imu.aRes;// - imu.accelBias[2];
+
 }
 
 /*
@@ -180,15 +181,18 @@ bool setupIMU(MPU9250 &imu, uint8_t sample_rate_divider = 47, uint8_t afs_opt = 
 */
 void setupMPL3115A2(MPL3115A2 &barometer, int option){
   barometer.begin();
+  barometer.setModeStandby();
+  barometer.reset();
+  delay(1000);
 
   if(option == ALTITUDE){
     barometer.setModeAltimeter(); // Measure altitude above sea level in meters
   }else if(option == PRESSURE){
     barometer.setModeBarometer();
   }
-  barometer.setOversampleRate(4); // Set Oversample to the recommended 16 samples, read takes 66ms
+  barometer.setOversampleRate(7); // Set Oversample to the 2 samples, read takes 10ms
   barometer.enableEventFlags(); // Enable all three pressure and temp event flags
-  delay(5000);
+  barometer.setModeActive();
 }
 
 /*
@@ -206,7 +210,7 @@ bool setupApds(APDS9301 &apds){
     return false;
   }
   apds.setGain(APDS9301::LOW_GAIN);
-  apds.setIntegrationTime(APDS9301::INT_TIME_101_MS);
+  apds.setIntegrationTime(APDS9301::INT_TIME_402_MS);
   apds.setLowThreshold(0); 
   apds.setHighThreshold(50);
   apds.setCyclesForInterrupt(1);
@@ -335,10 +339,9 @@ void sendPacket(DynamicJsonDocument &packet){
   //a lot smaller and easier on the bluetooth. We send this data over serial
   //to the Bluetooth Low Energy module
   char packetstart[] = "msgstart";
-  
-  char msgpacketbuf[120];
-  memset(msgpacketbuf,0,120*sizeof(char));
-  size_t buf_size = serializeMsgPack(packet, msgpacketbuf, 120*sizeof(char));
+  char msgpacketbuf[180];
+  memset(msgpacketbuf,0,180*sizeof(char));
+  size_t buf_size = serializeMsgPack(packet, msgpacketbuf, 180*sizeof(char));
   int i = 0;
   int j = 0;
   Serial.print(packetstart);
@@ -351,7 +354,6 @@ void sendPacket(DynamicJsonDocument &packet){
     }
   }
   delay(60);
-  Serial.flush();
   //a note on the delays, if we don't add the 60ms delay inbetween each
   //packet the hm19 tends to overwrite individual packets. 
   //We go with a 100 byte packet assumption because that is a safe size 
@@ -397,4 +399,11 @@ void logData(OpenLog &myLog, DynamicJsonDocument &packet) {
 void logData(OpenLog &myLog, const String &string) {
   myLog.println(string);
   myLog.syncFile();
+}
+
+
+int freeRam () {
+  extern int __heap_start, *__brkval;
+  int v;
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
 }

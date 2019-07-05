@@ -15,8 +15,10 @@ This program is free software: you can redistribute it and/or modify
 #ifndef DATABOT_H
 #define DATABOT_H
 
+#include "libs/Wire.h"
 #include "libs/ArduinoJson.h"
 #include "libs/MPU9250.h"
+#include "libs/quaternionFilters.h"
 #include "libs/SparkFun_VEML6075_Arduino_Library.h"
 #include "libs/Sparkfun_APDS9301_Library.h"
 #include "libs/SparkFunMPL3115A2.h"
@@ -59,5 +61,7 @@ float getExternalTemperature(DallasTemperature &tempsensor);
 void sendPacket(DynamicJsonDocument &packet);
 void logData(OpenLog &myLog, DynamicJsonDocument &packet);
 void logData(OpenLog &myLog, const String &string);
+
+int freeRam();
 
 #endif

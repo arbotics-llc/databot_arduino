@@ -33,7 +33,7 @@
 #include "WProgram.h"
 #endif
 
-#include <Wire.h>
+#include "Wire.h"
 
 //The default I2C address for the Qwiic OpenLog is 0x2A (42). 0x29 is also possible.
 #define QOL_DEFAULT_ADDRESS (uint8_t)42

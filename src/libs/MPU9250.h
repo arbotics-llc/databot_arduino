@@ -9,7 +9,7 @@
 #define _MPU9250_H_
 
 #include <SPI.h>
-#include <Wire.h>
+#include "Wire.h"
 
 #define SERIAL_DEBUG true
 
@@ -290,7 +290,7 @@ public:
     void readGyroData(int16_t *);
     void readMagData(int16_t *);
     int16_t readTempData();
-    void updateTime();
+    void updateTime(unsigned long);
     void initAK8963(float *, uint8_t);
     void initMPU9250(uint8_t, uint8_t, uint8_t);
     void calibrateMPU9250(float * gyroBias, float * accelBias);
@@ -304,6 +304,11 @@ public:
     uint8_t readBytesWire(uint8_t, uint8_t, uint8_t, uint8_t *);
     bool isInI2cMode() { return _csPin == -1; }
     bool begin();
+
+    void enableFIFO();
+    void disableFIFO();
+    uint16_t readFIFOcount();
+    void updateFromFIFO(); 
 };  // class MPU9250
 
 #endif // _MPU9250_H_

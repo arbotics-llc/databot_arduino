@@ -33,7 +33,7 @@
 
 #define DEBUG_VEML6075
 
-#include <Wire.h>
+#include "Wire.h"
 
 typedef uint16_t veml6075_t;
 

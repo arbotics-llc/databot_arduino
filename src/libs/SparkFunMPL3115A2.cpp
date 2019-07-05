@@ -32,7 +32,7 @@
  
  */
 
-#include <Wire.h>
+#include "Wire.h"
 
 #include "SparkFunMPL3115A2.h"
 
@@ -54,7 +54,7 @@ void MPL3115A2::begin(void)
 //Returns -1 if no new data is available
 float MPL3115A2::readAltitude()
 {
-	toggleOneShot(); //Toggle the OST bit causing the sensor to immediately take another reading
+        toggleOneShot(); //Toggle the OST bit causing the sensor to immediately take another reading
 
 	//Wait for PDR bit, indicates we have new pressure data
 	int counter = 0;
@@ -99,15 +99,14 @@ float MPL3115A2::readAltitudeFt()
 //Returns -1 if no new data is available
 float MPL3115A2::readPressure()
 {
-	//Check PDR bit, if it's not set then toggle OST
-	if(IIC_Read(STATUS) & (1<<2) == 0) toggleOneShot(); //Toggle the OST bit causing the sensor to immediately take another reading
+	//Serial.println("startreadpressure");
+	byte status = IIC_Read(STATUS);
+	//Serial.println(status, BIN);
 
 	//Wait for PDR bit, indicates we have new pressure data
-	int counter = 0;
-	while(IIC_Read(STATUS) & (1<<2) == 0)
+	if(!(status & (1<<2)))
 	{
-		if(++counter > 600) return(-999); //Error out after max of 512ms for a read
-		delay(1);
+	    return -1;	
 	}
 
 	// Read pressure registers
@@ -123,7 +122,7 @@ float MPL3115A2::readPressure()
 	csb = Wire.read();
 	lsb = Wire.read();
 	
-	toggleOneShot(); //Toggle the OST bit causing the sensor to immediately take another reading
+	//toggleOneShot(); //Toggle the OST bit causing the sensor to immediately take another reading
 
 	// Pressure comes back as a left shifted 20 bit number
 	long pressure_whole = (long)msb<<16 | (long)csb<<8 | (long)lsb;
@@ -134,21 +133,18 @@ float MPL3115A2::readPressure()
 	float pressure_decimal = (float)lsb/4.0; //Turn it into fraction
 
 	float pressure = (float)pressure_whole + pressure_decimal;
+	//Serial.println("end read pressure");
+	//Serial.println(IIC_Read(STATUS), BIN);
 
 	return(pressure);
 }
 
 float MPL3115A2::readTemp()
 {
-	if(IIC_Read(STATUS) & (1<<1) == 0) toggleOneShot(); //Toggle the OST bit causing the sensor to immediately take another reading
-
-	//Wait for TDR bit, indicates we have new temp data
-	int counter = 0;
-	while( (IIC_Read(STATUS) & (1<<1)) == 0)
-	{
-		if(++counter > 600) return(-999); //Error out after max of 512ms for a read
-		delay(1);
-	}
+	byte status = IIC_Read(STATUS);
+	if(!(status & (1<<1))){
+	  return -1;
+        }
 
 	// Read temperature registers
 	Wire.beginTransmission(MPL3115A2_ADDRESS);
@@ -223,13 +219,24 @@ void MPL3115A2::setModeStandby()
   IIC_Write(CTRL_REG1, tempSetting);
 }
 
+//reset registers, must be in standby mode
+void MPL3115A2::reset()
+{  
+  //Serial.println(IIC_Read(CTRL_REG1), BIN);
+  IIC_Write(CTRL_REG1, 0x04);
+  delay(1000);
+  //Serial.println(IIC_Read(CTRL_REG1), BIN);
+}
+
 //Puts the sensor in active mode
 //This is needed so that we can modify the major control registers
 void MPL3115A2::setModeActive()
 {
+  //Serial.println(IIC_Read(CTRL_REG1), BIN);
   byte tempSetting = IIC_Read(CTRL_REG1); //Read current settings
   tempSetting |= (1<<0); //Set SBYB bit for Active mode
   IIC_Write(CTRL_REG1, tempSetting);
+  //Serial.println(IIC_Read(CTRL_REG1), BIN);
 }
 
 //Call with a rate from 0 to 7. See page 33 for table of ratios.

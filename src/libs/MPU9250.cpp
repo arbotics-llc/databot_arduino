@@ -113,8 +113,10 @@ void MPU9250::readAccelData(int16_t * destination)
 {
   uint8_t rawData[6];  // x/y/z accel register data stored here
   // Read the six raw data registers into data array
-  readBytes(_I2Caddr, ACCEL_XOUT_H, 6, &rawData[0]);
-
+  if(readBytes(_I2Caddr, ACCEL_XOUT_H, 6, &rawData[0]) == 0xff){
+    Serial.println("read failure");
+    return;
+  }
   // Turn the MSB and LSB into a signed 16-bit value
   destination[0] = ((int16_t)rawData[0] << 8) | rawData[1] ;
   destination[1] = ((int16_t)rawData[2] << 8) | rawData[3] ;
@@ -168,9 +170,9 @@ int16_t MPU9250::readTempData()
 
 // Calculate the time the last update took for use in the quaternion filters
 // TODO: This doesn't really belong in this class.
-void MPU9250::updateTime()
+void MPU9250::updateTime(unsigned long time)
 {
-  Now = micros();
+  Now = time;
 
   // Set integration time by time elapsed since last filter update
   deltat = ((Now - lastUpdate) / 1000000.0f);
@@ -222,8 +224,8 @@ void MPU9250::initMPU9250(uint8_t ascale, uint8_t gscale, uint8_t sample_rate)
   MPU9250::Gscale = gscale;
   // wake up device
   // Clear sleep mode bit (6), enable all sensors
-  writeByte(_I2Caddr, PWR_MGMT_1, 0x00);
-  delay(100); // Wait for all registers to reset
+  writeByte(_I2Caddr, PWR_MGMT_1, 0x80);
+  delay(1000); // Wait for all registers to reset
 
   // Get stable time source
   // Auto select clock source to be PLL gyroscope reference if ready else
@@ -298,6 +300,46 @@ void MPU9250::initMPU9250(uint8_t ascale, uint8_t gscale, uint8_t sample_rate)
   {
     setupMagForSPI();
   }
+}
+
+void MPU9250::enableFIFO(){
+
+  writeByte(_I2Caddr, USER_CTRL, 0x40);  // Enable FIFO
+  // Enable gyro and accelerometer sensors for FIFO  (max size 512 bytes in
+  // MPU-9150)
+  writeByte(_I2Caddr, FIFO_EN, 0x78);
+
+}
+
+void MPU9250::disableFIFO(){
+
+  writeByte(_I2Caddr, FIFO_EN, 0x00);
+
+}
+
+uint16_t MPU9250::readFIFOcount(){
+  uint8_t data[2] = {0};
+  uint16_t fifo_count = 0;
+
+  readBytes(_I2Caddr, FIFO_COUNTH, 2, &data[0]);
+  fifo_count = ((uint16_t)data[0] << 8) | data[1];
+  //each packet has 12 bytes for accel and gyro data
+  fifo_count = fifo_count/12;
+
+  return fifo_count;
+}
+
+void MPU9250::updateFromFIFO(){
+  uint8_t data[12] = {0}; // data array to hold accelerometer and gyro x, y, z, data
+  readBytes(_I2Caddr, FIFO_R_W, 12, &data[0]);
+  // Form signed 16-bit integer for each sample in FIFO
+  MPU9250::ax = (float) (((int16_t)data[0] << 8) | data[1]  ) * MPU9250::aRes;
+  MPU9250::ay = (float) (((int16_t)data[2] << 8) | data[3]  ) * MPU9250::aRes;
+  MPU9250::az = (float) (((int16_t)data[4] << 8) | data[5]  ) * MPU9250::aRes;
+  MPU9250::gx = (float) (((int16_t)data[6] << 8) | data[7]  ) * MPU9250::gRes;
+  MPU9250::gy = (float) (((int16_t)data[8] << 8) | data[9]  ) * MPU9250::gRes;
+  MPU9250::gz = (float) (((int16_t)data[10] << 8) | data[11]) * MPU9250::gRes;
+ 
 }
 
 
@@ -752,7 +794,10 @@ uint8_t MPU9250::writeByteWire(uint8_t deviceAddress, uint8_t registerAddress,
   	_wire->beginTransmission(deviceAddress);  	// Initialize the Tx buffer
   	_wire->write(registerAddress);      		// Put slave register address in Tx buffer
   	_wire->write(data);                 		// Put data in Tx buffer
-  	_wire->endTransmission();           		// Send the Tx buffer
+  	if(_wire->endTransmission() >4){
+	  Serial.println("i2c reset");
+	  return -1;
+        }
   	// TODO: Fix this to return something meaningful
   	// return NULL; // In the meantime fix it to return the right type
   	return 0;
@@ -838,7 +883,8 @@ uint8_t MPU9250::readByteWire(uint8_t deviceAddress, uint8_t registerAddress)
   // Put slave register address in Tx buffer
   _wire->write(registerAddress);
   // Send the Tx buffer, but send a restart to keep connection alive
-  _wire->endTransmission(false);
+  // sean's note: we try not doing this
+  _wire->endTransmission();
   // Read one byte from slave register address
   _wire->requestFrom(deviceAddress, (uint8_t) 1);
   // Fill Rx buffer with result
@@ -862,12 +908,17 @@ uint8_t MPU9250::readBytesWire(uint8_t deviceAddress, uint8_t registerAddress,
   // Put slave register address in Tx buffer
   _wire->write(registerAddress);
   // Send the Tx buffer, but send a restart to keep connection alive
-  _wire->endTransmission(false);
-
+  // sean's note: we will test not doing this because of i2c hangs actually
+  if(_wire->endTransmission(true) > 4){
+    Serial.println("i2c reset");
+    return 0xff; //return -1 on timeout i2c failure;
+  }
   uint8_t i = 0;
   // Read bytes from slave register address
-  _wire->requestFrom(deviceAddress, count);
-  while (_wire->available())
+  if(_wire->requestFrom(deviceAddress, count) == 0xff){
+    return 0xff;
+  }
+  while (_wire->available() && i < count)
   {
     // Put read results in the Rx buffer
     dest[i++] = _wire->read();

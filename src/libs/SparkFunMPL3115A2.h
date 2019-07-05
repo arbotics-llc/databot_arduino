@@ -18,7 +18,7 @@
  #include "WProgram.h"
 #endif
 
-#include <Wire.h>
+#include "Wire.h"
 
 #define MPL3115A2_ADDRESS 0x60 // Unshifted 7-bit I2C address for sensor
 
@@ -84,17 +84,18 @@ public:
   void setModeBarometer(); // Puts the sensor into Pascal measurement mode.
   void setModeAltimeter(); // Puts the sensor into altimetery mode.
   void setModeStandby(); // Puts the sensor into Standby mode. Required when changing CTRL1 register.
+  void reset();
   void setModeActive(); // Start taking measurements!
   void setOversampleRate(byte); // Sets the # of samples from 1 to 128. See datasheet.
   void enableEventFlags(); // Sets the fundamental event flags. Required during setup.
   void trimAltitudeMeters(int); //allows user to trim altimeter with current altitude
+  void toggleOneShot();
 
   //Public Variables
 
 private:
   //Private Functions
 
-  void toggleOneShot();
   byte IIC_Read(byte regAddr);
   void IIC_Write(byte regAddr, byte value);
 

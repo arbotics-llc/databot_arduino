@@ -41,7 +41,7 @@
 #define SparkFun_SGP30_Arduino_Library_h
 
 #include "Arduino.h"
-#include <Wire.h>
+#include "Wire.h"
 typedef enum {
   SUCCESS = 0,
   ERR_BAD_CRC,
