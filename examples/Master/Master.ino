@@ -7,23 +7,13 @@
 #define CURRENT_ALTITUDE 0 
 
 //uncomment below to communicated with IDE over serial
-//#define IDE
-
-//either communicate over serial with arduino ide or with science journal with BLE
-//doing both would take too much time...
-#ifndef IDE
-   //uncomment below to communicate with science journal
-   //#define GSJ
-#endif
+#define IDE
 
 //uncomment below to store data to sd card
 #define SDCARD
 
 //uncomment below to enable the 3115A2 altitude/pressure sensor
 #define BAROMETER 
-//uncomment one of the two below to enable pressure sensor or altitude sensor
-#define READALTITUDE
-//#define READPRESSURE
 
 //uncomment below to enable the shtc3 humidity sensor
 #define HUMIDITY
@@ -52,11 +42,14 @@
 
 unsigned long loopStartTime = 0;
 
-String myfile = "zipline.txt";
+String myfile = "csv.txt";
 DynamicJsonDocument packet(200);
 
 #ifdef BAROMETER
 MPL3115A2 barometer;
+float pressure = 0;
+float altitude = 0;
+#define LPF_beta 0.90
 #endif
 
 #ifdef SDCARD
@@ -103,6 +96,8 @@ void setup() {
 
   setupSensors();
 
+  pressure = barometer.readPressure();
+
   //open our log file and begin writing
   #ifdef SDCARD
   myLog.append(myfile);
@@ -118,10 +113,11 @@ void setup() {
 
   delay(1000);
 
+  #ifdef IDE
+  Serial.println(generateCsvHeader());
+  #endif
+
 }
-
-
-int everyfourloops = 0;
 
 // the loop function runs over and over again forever
 void loop() {
@@ -129,27 +125,15 @@ void loop() {
     loopStartTime = millis();
     
     updateSensors();
-    //handleIMU();
-    //updateJson();
+    String csv_sensors = generateCsvRecord();
     #ifdef SDCARD
-    logData(myLog, generateCsvRecord());
+    logData(myLog, csv_sensors);
     #endif
-    /*everyfourloops++;
-    if(everyfourloops % 5 == 0){
-    everyfourloops = 0;
 
     #ifdef IDE
-    ideJson();
+    Serial.println(csv_sensors);
     #endif
     
-    #ifdef GSJ
-    sendPacket(packet);
-    #endif
-
-    #ifdef SDCARD
-    logData(myLog, packet);
-    #endif
-    }*/
     //delay until we reach our desired loop time
     while(millis() < loopStartTime + LOOP_TIME_MS)
     {
@@ -158,109 +142,21 @@ void loop() {
 
 }
 
-void handleIMU(){
-  #ifdef IMU
-    packet.clear();
-    
-    packet[F("a.x")] = myIMU.ax;
-    packet[F("a.y")] = myIMU.ay;
-    packet[F("a.z")] = myIMU.az;
-    packet[F("g.x")] = myIMU.gx;
-    packet[F("g.y")] = myIMU.gy; 
-    packet[F("g.z")] = myIMU.gz;
-    packet[F("m.x")] = myIMU.mx;
-    packet[F("m.y")] = myIMU.my;
-    packet[F("m.z")] = myIMU.mz;
-    packet[F("time")] = millis();
-  
-    #ifdef IDE
-    ideJson();
-    #endif
-    
-    #ifdef GSJ
-    sendPacket(packet);
-    #endif
-  
-    #ifdef SDCARD
-    logData(myLog, packet);
-    #endif
-  
-    packet.clear();
-
-  #endif
-}
-
 void ideJson() {
   String logoutputjson = "";
   serializeJson(packet, logoutputjson);
   Serial.println(logoutputjson);
 }
 
-float smoothAltitude = 0;
-float smoothPressure = 0;
-#define LPF_beta 0.100
-
-float relhumidity = 0;
-
-void updateJson() {
-  #ifdef BAROMETER 
-
-    #ifdef READALTITUDE
-    packet[F("altitude")] = smoothAltitude;
-    #endif
-
-    #ifdef READPRESSURE
-    packet[F("pressure")] = smoothPressure;
-    #endif
-
-  #endif
-
-  #ifdef HUMIDITY
-  shtc3.update();
-  shtc3.sleep(true);
-  packet[F("humidity")] = shtc3.toPercent();
-  #endif
-
-  #ifdef AIR_QUALITY
-  sgp30.measureAirQuality();
-  packet[F("CO2")] = (float)sgp30.CO2;
-  packet[F("TVOC")] = (float)sgp30.TVOC;
-  #endif
-
-  #ifdef EXTERNAL_TEMP
-  packet[F("temperature")] = getExternalTemperature(tempsensor);
-  #endif
-
-  #ifdef UV
-  float uva = uv.uva();
-  float uvb = uv.uvb();
-  packet[F("UV A")] = uv.uva();
-  packet[F("UV B")] =  uv.uvb();
-  packet[F("UV Index")] = uv.index( uva, uvb );
-  #endif
-
-  #ifdef LIGHT
-  packet[F("lux")] = apds.readLuxLevel();
-  #endif
-
-  packet[F("time")] = millis();
-
-}
-
 void updateSensors() {
 
   #ifdef BAROMETER 
   float rawReading; 
+  rawReading = barometer.readPressure();
+  pressure = pressure - (LPF_beta * (pressure - rawReading));
 
-    #ifdef READALTITUDE
-    rawReading = barometer.readAltitude();
-    smoothAltitude = smoothAltitude - (LPF_beta * (smoothAltitude - rawReading)); 
-    #endif
-
-    #ifdef READPRESSURE
-    rawReading = barometer.readPressure();
-    smoothPressure = smoothPressure - (LPF_beta * (smoothAltitude - rawReading);
-    #endif
+  //calculate altitude from pressure
+  altitude = 44330.77 * (1-pow((pressure/101326), 0.1902632));
   #endif
 
   #ifdef HUMIDITY
@@ -276,9 +172,9 @@ void updateSensors() {
   #endif
 
   #ifdef IMU
-  updateImuAcceleration(myIMU);
-  updateImuGyro(myIMU);
-  updateImuMag(myIMU);
+    updateImuAcceleration(myIMU);
+    updateImuGyro(myIMU);
+    updateImuMag(myIMU);
   #endif
 
   #ifdef UV
@@ -294,16 +190,7 @@ void updateSensors() {
 void setupSensors() {
 
   #ifdef BAROMETER 
-
-    #ifdef READALTITUDE
-    setupMPL3115A2(barometer, ALTITUDE);
-    barometer.trimAltitudeMeters(CURRENT_ALTITUDE);
-    #endif
-    
-    #ifdef READPRESSURE
-    setupMPL3115A2(barometer, PRESSURE);
-    #endif
-
+  setupMPL3115A2(barometer, PRESSURE);
   #endif
 
   #ifdef SDCARD
@@ -333,16 +220,6 @@ void setupSensors() {
     #ifdef IDE
       setupIMU(myIMU, 47, accel_range, gyro_range, mag_range);
     #endif
-
-    #ifdef GSJ
-      setupIMU(myIMU, 100, accel_range, gyro_range, mag_range);
-    #endif
-
-    #ifndef IDE
-      #ifndef GSJ
-        setupIMU(myIMU, 100, accel_range, gyro_range, mag_range);
-      #endif
-    #endif
   #endif
 
   #ifdef UV
@@ -358,14 +235,8 @@ void setupSensors() {
 String generateCsvHeader(){
   String csvHeader = "";
   #ifdef BAROMETER 
-
-    #ifdef READALTITUDE
-      csvHeader += ",altitude";
-    #endif
-
-    #ifdef READPRESSURE
-      csvHeader += ",pressure";
-    #endif
+    csvHeader += ",altitude";
+    csvHeader += ",pressure";
   #endif
 
   #ifdef HUMIDITY
@@ -409,15 +280,8 @@ String generateCsvRecord(){
   String csvRecord = "";
   String comma = ",";
   #ifdef BAROMETER 
-
-    #ifdef READALTITUDE
-    csvRecord += comma + smoothAltitude;
-    #endif
-
-    #ifdef READPRESSURE
-     csvRecord += comma + smoothPressure;
-    #endif
-
+  csvRecord += comma + altitude;
+  csvRecord += comma + pressure;
   #endif
 
   #ifdef HUMIDITY

@@ -33,7 +33,7 @@ void loop() {
   float relhumidity = shtc3.toPercent();
   float abshumidity = RHtoAbsolute(relhumidity,temperature);
 
-  Serial.println(abshumidity);
+  Serial.println(relhumidity);
 
   //wait for serial to finish and sleep for 250 milliseconds every loop
   Serial.flush();

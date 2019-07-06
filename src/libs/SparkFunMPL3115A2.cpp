@@ -99,6 +99,7 @@ float MPL3115A2::readAltitudeFt()
 //Returns -1 if no new data is available
 float MPL3115A2::readPressure()
 {
+	static float old_reading = 0;
 	//Serial.println("startreadpressure");
 	byte status = IIC_Read(STATUS);
 	//Serial.println(status, BIN);
@@ -106,7 +107,7 @@ float MPL3115A2::readPressure()
 	//Wait for PDR bit, indicates we have new pressure data
 	if(!(status & (1<<2)))
 	{
-	    return -1;	
+	    return old_reading;	
 	}
 
 	// Read pressure registers
@@ -114,7 +115,7 @@ float MPL3115A2::readPressure()
 	Wire.write(OUT_P_MSB);  // Address of data to get
 	Wire.endTransmission(false); // Send data to I2C dev with option for a repeated start. THIS IS NECESSARY and not supported before Arduino V1.0.1!
 	if (Wire.requestFrom(MPL3115A2_ADDRESS, 3) != 3) { // Request three bytes
-		return -999;
+		return old_reading;
 	}
 
 	byte msb, csb, lsb;
@@ -133,6 +134,7 @@ float MPL3115A2::readPressure()
 	float pressure_decimal = (float)lsb/4.0; //Turn it into fraction
 
 	float pressure = (float)pressure_whole + pressure_decimal;
+	old_reading = pressure;
 	//Serial.println("end read pressure");
 	//Serial.println(IIC_Read(STATUS), BIN);
 
