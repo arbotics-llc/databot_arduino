@@ -42,7 +42,7 @@
 
 unsigned long loopStartTime = 0;
 
-String myfile = "csv.txt";
+String myfile = "databot.csv";
 DynamicJsonDocument packet(200);
 
 #ifdef BAROMETER
