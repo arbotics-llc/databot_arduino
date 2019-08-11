@@ -118,6 +118,7 @@ void setup() {
   smoothPressure = barometer.readPressure();
   //open our log file and begin writing
   #ifdef SDCARD
+  Wire.setTimeout(1000000);
   myLog.append(myfile);
   long sizeOfFile = myLog.size(myfile);
   myLog.append(myfile);
@@ -125,8 +126,9 @@ void setup() {
   myLog.println(F("--------------------------------------------"));
   myLog.println(F("--------New Data Bot Logging Session--------"));
   myLog.println(F("--------------------------------------------"));
-  myLog.println(generateCsvHeader());
+  //myLog.println(generateCsvHeader());
   myLog.syncFile();
+  Wire.setTimeout(1000);
   #endif
 
   delay(1000);
@@ -239,8 +241,8 @@ void updateJson() {
   #ifdef UV
   float uva = uv.uva();
   float uvb = uv.uvb();
-  packet[F("g")] = (uint16_t) uv.uva();
-  packet[F("h")] = (uint16_t) uv.uvb();
+  packet[F("g")] = (uint16_t) uva;
+  packet[F("h")] = (uint16_t) uvb;
   packet[F("i")] = uv.index( uva, uvb );
   #endif
 

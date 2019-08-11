@@ -9,7 +9,7 @@
 #define CURRENT_ALTITUDE 0 
 
 //uncomment below to store data to sd card
-#define SDCARD
+//#define SDCARD
 
 //uncomment below to enable the 3115A2 altitude/pressure sensor
 #define BAROMETER 
@@ -128,7 +128,6 @@ void loop() {
     updateJson();
     
     serializeJson(packet, Serial);
-    Serial.println();
 
     #ifdef SDCARD
     logData(myLog, packet);
@@ -157,7 +156,6 @@ void handleIMU(){
     packet[F("time")] = millis();
     
     serializeJson(packet, Serial);
-    Serial.println();
   
     #ifdef SDCARD
     logData(myLog, packet);

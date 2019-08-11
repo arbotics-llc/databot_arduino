@@ -42,7 +42,7 @@
 
 unsigned long loopStartTime = 0;
 
-String myfile = "databot.csv";
+String myfile = "databot";
 DynamicJsonDocument packet(200);
 
 #ifdef BAROMETER
@@ -100,6 +100,7 @@ void setup() {
 
   //open our log file and begin writing
   #ifdef SDCARD
+  Wire.setTimeout(100000);
   myLog.append(myfile);
   long sizeOfFile = myLog.size(myfile);
   myLog.append(myfile);
@@ -109,6 +110,8 @@ void setup() {
   myLog.println(F("--------------------------------------------"));
   myLog.println(generateCsvHeader());
   myLog.syncFile();
+  Wire.setTimeout(1000);
+
   #endif
 
   delay(1000);
@@ -315,8 +318,8 @@ String generateCsvRecord(){
   #ifdef UV
   float uva = uv.uva();
   float uvb = uv.uvb();
-  csvRecord += comma +  uv.uva();
-  csvRecord += comma +   uv.uvb();
+  csvRecord += comma + uva;
+  csvRecord += comma + uvb;
   csvRecord += comma + uv.index( uva, uvb );
   #endif
 
