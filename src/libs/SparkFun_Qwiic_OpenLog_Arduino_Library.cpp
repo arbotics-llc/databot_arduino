@@ -303,8 +303,9 @@ boolean OpenLog::sendCommand(uint8_t registerNumber, String option1)
     _i2cPort->print(option1);
   }
   
-  if (_i2cPort->endTransmission() != 0)
+  if (_i2cPort->endTransmission() != 0){
     return (false);
+  }
 
   return (true);
   //Upon completion any new characters sent to OpenLog will be recorded to this file

@@ -128,6 +128,7 @@ void loop() {
     updateJson();
     
     serializeJson(packet, Serial);
+    Serial.println();
 
     #ifdef SDCARD
     logData(myLog, packet);
@@ -156,6 +157,7 @@ void handleIMU(){
     packet[F("time")] = millis();
     
     serializeJson(packet, Serial);
+    Serial.println();
   
     #ifdef SDCARD
     logData(myLog, packet);

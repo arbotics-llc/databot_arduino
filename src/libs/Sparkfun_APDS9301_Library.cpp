@@ -141,27 +141,45 @@ float APDS9301::readLuxLevel()
 {
   unsigned int ch1Int = readCH1Level();
   unsigned int ch0Int = readCH0Level();
-  float ch0 = (float)readCH0Level();
-  float ch1 = (float)readCH1Level();
+  float ch0 = (float)ch0Int;
+  float ch1 = (float)ch1Int;
   switch (getIntegrationTime())
   {
     case INT_TIME_13_7_MS:
     
     if ((ch1Int >= 5047) || (ch0Int >= 5047)) 
     {
-      return -1;
+      if(ch1Int >= 5047){
+        ch1Int = 5047;
+      }
+      if(ch0Int >= 5047){
+        ch0Int = 5047;
+      }
+      //return -1;
     }
     break;
     case INT_TIME_101_MS:
     if ((ch1Int >= 37177) || (ch0Int >= 37177)) 
     {
-      return -1;
+      if(ch1Int >= 37177){
+        ch1Int = 37177;
+      }
+      if(ch0Int >= 37177){
+        ch0Int = 37177;
+      }
+      //return -1;
     }
     break;
     case INT_TIME_402_MS:
     if ((ch1Int >= 65535) || (ch0Int >= 65535))
-    { 
-      return -1;
+    {
+      if(ch1Int >= 65535){
+        ch1Int = 65535;
+      }
+      if(ch0Int >= 65535){
+        ch0Int = 65535;
+      } 
+      //return -1;
     }
     break;
   }

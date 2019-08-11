@@ -87,6 +87,16 @@ void TwoWire::setClock(uint32_t clock)
   twi_setFrequency(clock);
 }
 
+void TwoWire::setTimeout(unsigned long timeout)
+{
+  twi_set_timeout(timeout);
+}
+
+unsigned long TwoWire::getTimeout()
+{
+  return twi_get_timeout();
+}
+
 uint8_t TwoWire::requestFrom(uint8_t address, uint8_t quantity, uint32_t iaddress, uint8_t isize, uint8_t sendStop)
 {
   if (isize > 0) {

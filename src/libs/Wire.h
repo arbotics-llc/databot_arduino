@@ -54,6 +54,8 @@ class TwoWire : public Stream
     void begin(int);
     void end();
     void setClock(uint32_t);
+    void setTimeout(unsigned long);
+    unsigned long getTimeout();
     void beginTransmission(uint8_t);
     void beginTransmission(int);
     uint8_t endTransmission(void);

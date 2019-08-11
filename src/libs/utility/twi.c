@@ -570,12 +570,22 @@ ISR(TWI_vect)
   }
 }
 
+void twi_set_timeout(unsigned long timeout)
+{
+  twi_timeout = timeout;
+}
+
+unsigned long twi_get_timeout()
+{
+  return twi_timeout;
+}
+
 //Nirea. Time Out
 static volatile uint32_t twi_toutc;
 uint8_t twi_tout(uint8_t ini)
 {
 	if (ini) twi_toutc=0; else twi_toutc++;	
-	if (twi_toutc>=500UL) {
+	if (twi_toutc>=twi_timeout) {
 		twi_toutc=0;
 		twi_init();
 		return 1;

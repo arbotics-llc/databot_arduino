@@ -37,6 +37,8 @@
   #define TWI_MTX   2
   #define TWI_SRX   3
   #define TWI_STX   4
+
+  static unsigned long twi_timeout = 1000;
   
   void twi_init(void);
   void twi_disable(void);
@@ -50,6 +52,8 @@
   void twi_reply(uint8_t);
   void twi_stop(void);
   void twi_releaseBus(void);
+  void twi_set_timeout(unsigned long);
+  unsigned long twi_get_timeout();
   uint8_t twi_tout(uint8_t);
 
 #endif

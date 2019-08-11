@@ -210,7 +210,7 @@ bool setupApds(APDS9301 &apds){
     return false;
   }
   apds.setGain(APDS9301::LOW_GAIN);
-  apds.setIntegrationTime(APDS9301::INT_TIME_402_MS);
+  apds.setIntegrationTime(APDS9301::INT_TIME_101_MS);
   apds.setLowThreshold(0); 
   apds.setHighThreshold(50);
   apds.setCyclesForInterrupt(1);
@@ -239,7 +239,7 @@ bool setupVEML6075(VEML6075 &uv){
     return false;
   }
 
-  ret = uv.setIntegrationTime(VEML6075::IT_200MS);
+  ret = uv.setIntegrationTime(VEML6075::IT_100MS);
   if (ret != VEML6075_ERROR_SUCCESS) {
     Serial.println("failed to set integration time");
     return false;
@@ -377,12 +377,13 @@ void logData(OpenLog &myLog, DynamicJsonDocument &packet) {
   //json is a human readable data format, not as small as msgpack but this way
   //we can understand what is stored in the sd card easily. This data gets sent
   //over i2c to the sd card
+  unsigned long old_timeout = Wire.getTimeout();
+  Wire.setTimeout(100000);
   String logoutputjson = "";
   serializeJson(packet, logoutputjson);
   myLog.println(logoutputjson);
   myLog.syncFile();
-
-  logoutputjson = "";
+  Wire.setTimeout(old_timeout);
 }
 
 /*
@@ -397,8 +398,11 @@ void logData(OpenLog &myLog, DynamicJsonDocument &packet) {
 * returns void
 */
 void logData(OpenLog &myLog, const String &string) {
+  unsigned long old_timeout = Wire.getTimeout();
+  Wire.setTimeout(100000);
   myLog.println(string);
   myLog.syncFile();
+  Wire.setTimeout(old_timeout);
 }
 
 
