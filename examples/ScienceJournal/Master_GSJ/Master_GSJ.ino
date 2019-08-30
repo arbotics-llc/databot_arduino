@@ -178,9 +178,9 @@ void handleIMU(){
         packet[F("k")].add((int16_t) (myIMU.ax * 1000));
         packet[F("l")].add((int16_t) (myIMU.ay * 1000));
         packet[F("m")].add((int16_t) (myIMU.az * 1000));
-        packet[F("n")].add((int16_t) (myIMU.gx * 100));
-        packet[F("o")].add((int16_t) (myIMU.gy * 100));
-        packet[F("p")].add((int16_t) (myIMU.gz * 100));
+        packet[F("n")].add((int16_t) (myIMU.gx * DEG_TO_RAD * 100));
+        packet[F("o")].add((int16_t) (myIMU.gy * DEG_TO_RAD * 100));
+        packet[F("p")].add((int16_t) (myIMU.gz * DEG_TO_RAD * 100));
       }
       fifo_count--;
     }

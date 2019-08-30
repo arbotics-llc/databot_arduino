@@ -307,9 +307,9 @@ String generateCsvRecord(){
   csvRecord += comma + myIMU.ax;
   csvRecord += comma + myIMU.ay;
   csvRecord += comma + myIMU.az;
-  csvRecord += comma + myIMU.gx;
-  csvRecord += comma + myIMU.gy; 
-  csvRecord += comma + myIMU.gz;
+  csvRecord += comma + myIMU.gx * DEG_TO_RAD;
+  csvRecord += comma + myIMU.gy * DEG_TO_RAD; 
+  csvRecord += comma + myIMU.gz * DEG_TO_RAD;
   csvRecord += comma + myIMU.mx;
   csvRecord += comma + myIMU.my;
   csvRecord += comma + myIMU.mz;

@@ -147,9 +147,9 @@ void handleIMU(){
     packet[F("a.x")] = myIMU.ax;
     packet[F("a.y")] = myIMU.ay;
     packet[F("a.z")] = myIMU.az;
-    packet[F("g.x")] = myIMU.gx;
-    packet[F("g.y")] = myIMU.gy; 
-    packet[F("g.z")] = myIMU.gz;
+    packet[F("g.x")] = myIMU.gx * RAD_TO_DEG;
+    packet[F("g.y")] = myIMU.gy * RAD_TO_DEG; 
+    packet[F("g.z")] = myIMU.gz * RAD_TO_DEG;
     packet[F("m.x")] = myIMU.mx;
     packet[F("m.y")] = myIMU.my;
     packet[F("m.z")] = myIMU.mz;

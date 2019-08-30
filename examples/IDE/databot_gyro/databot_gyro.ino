@@ -30,11 +30,11 @@ void loop() {
 
   updateImuGyro(myIMU);
   
-  Serial.print(myIMU.gx);
+  Serial.print(myIMU.gx * DEG_TO_RAD);
   Serial.print(",");
-  Serial.print(myIMU.gy);
+  Serial.print(myIMU.gy * DEG_TO_RAD);
   Serial.print(",");
-  Serial.println(myIMU.gz);
+  Serial.println(myIMU.gz * DEG_TO_RAD);
 
   //wait for serial to finish then sleep for 15 milliseconds every loop
   Serial.flush();
