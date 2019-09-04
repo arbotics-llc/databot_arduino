@@ -166,7 +166,7 @@ SHTC3_Status_TypeDef	SHTC3::checkID()
 	retval = sendCommand(SHTC3_CMD_READ_ID);
 	if(retval != SHTC3_Status_Nominal){ return exitOp(retval, __FILE__, __LINE__); }
 	
-	numBytesRx = _wire->requestFrom(SHTC3_ADDR_7BIT, numBytesRequest);
+	numBytesRx = _wire->requestFrom((uint8_t)SHTC3_ADDR_7BIT, numBytesRequest);
 	if(numBytesRx != numBytesRequest){ exitOp(SHTC3_Status_Error, __FILE__, __LINE__); return SHTC3_Status_Error; }
 
 	uint8_t IDhb = _wire->read();
@@ -277,7 +277,7 @@ SHTC3_Status_TypeDef 	SHTC3::update()
 			{
 				_wire->read();
 			}			
-			numBytesRx = _wire->requestFrom(SHTC3_ADDR_7BIT, numBytesRequest);
+			numBytesRx = _wire->requestFrom((uint8_t)SHTC3_ADDR_7BIT, numBytesRequest);
 			break;
 
 		case SHTC3_CMD_CSD_RHF_NPM :
