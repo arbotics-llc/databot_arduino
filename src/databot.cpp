@@ -360,6 +360,58 @@ void sendPacket(DynamicJsonDocument &packet){
   //most phones should be able to safely negotiate
 }
 
+void unpackSensorDataAndPad (DynamicJsonDocument &packet, const String key, String &string) {
+
+  JsonObject object = packet.as<JsonObject>();
+
+  float f = 0.0f;
+
+  if (object.containsKey(key)) {
+
+    JsonVariant jv = object.getMember(key);
+
+    f = jv.as<float>();
+
+  }
+
+  String jvs = String(f, BLUETOOTH_FIXED_FLOATPLACES); // Six digit decimal accuracy
+
+  string.concat(BLUETOOTH_FIXEDSIZE_PADDING.substring(0, BLUETOOTH_FIXED_FIELDSIZE-jvs.length()));
+
+  string.concat(jvs);
+
+  string.concat(BLUETOOTH_FIXEDSIZE_ENDMARK); // end of field mark
+
+}
+
+void sendPacketFixedStringsFormat (DynamicJsonDocument &packet) {
+
+  String keys = String("abcdefghijklmnopqrstu");
+
+  String payload = String("");
+
+  String single_field_value_padded = String("");
+
+  for (int n = 0; n < keys.length(); n++) {
+
+    unpackSensorDataAndPad(packet, String(keys.charAt(n)), single_field_value_padded);
+
+    payload.concat(single_field_value_padded);
+
+    single_field_value_padded = "";
+
+  }
+
+  if (payload.length() > 0) {
+
+    Serial.println(payload);
+
+  }
+
+  delay(60);
+
+}
+
 /*
 * Function logData
 * converts JSON packet and sends to the SD card over i2c to be stored 
