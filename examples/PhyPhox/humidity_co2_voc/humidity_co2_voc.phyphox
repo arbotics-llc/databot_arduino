@@ -23,9 +23,9 @@
     </analysis>
     <views>
         <view label="Raw Data">
-            <graph editor:uuid="155" label="Pressure" aspectRatio="2.5" style="lines" lineWidth="1" color="ff7e22" partialUpdate="true" history="1" labelX="Time (ms)" labelY="Humidity" labelZ="" unitX="MS" unitY="HUM" unitZ="" logX="false" logY="false" logZ="false" xPrecision="3" yPrecision="6" zPrecision="3" scaleMinX="auto" scaleMaxX="auto" scaleMinY="auto" scaleMaxY="auto" scaleMinZ="auto" scaleMaxZ="auto" minX="0" maxX="0" minY="0" maxY="0" minZ="0" maxZ="0"  mapWidth="0">
+            <graph editor:uuid="155" label="Pressure" aspectRatio="2.5" style="lines" lineWidth="1" color="ff7e22" partialUpdate="true" history="1" labelX="Time" labelY="CO2" labelZ="" unitX="ms" unitY="" unitZ="" logX="false" logY="false" logZ="false" xPrecision="3" yPrecision="6" zPrecision="3" scaleMinX="auto" scaleMaxX="auto" scaleMinY="auto" scaleMaxY="auto" scaleMinZ="auto" scaleMaxZ="auto" minX="0" maxX="0" minY="0" maxY="0" minZ="0" maxZ="0"  mapWidth="0">
                 <input axis="x">MS</input>
-                <input axis="y">HUM</input>
+                <input axis="y">CO2</input>
             </graph>
         </view>
     </views>

@@ -40,55 +40,15 @@ void setup() {
 
 void loop() {
     
-    // Place the altitude into field "A", and timestamp into field "b", as that's the
+    // Place the altitude into field "a", and timestamp into field "b", as that's the
     // data exchange format by the packet sending code
     
-    packet[F("a")] = barometer.readAltitude();
-
-    packet[F("b")] = millis() - timestamp;  // relative to startup
+    packet[F("m")] = ((millis()-timestamp) / 1000) * 1.0; // start with the "seconds" count of the sample
     
-    sendPacketFixedStringsFormat(packet);
+    packet[F("a")] = barometer.readAltitude();
+    
+    sendPacketFixedStringsFormat("ma", packet);
 
-    delay(500);
+    delay(1000);
 
 }
-
-// Sample .phyphox file. Load this file into PhyPhox's editor (at https://phyphox.org/editor) to generate an online QR
-// code & scan using your device's camera. Alternatively, scan the QR code at http://databot.us.com within the PhyPhox app
-/*
-
-<phyphox xmlns="http://phyphox.org/xml" xmlns:editor="http://phyphox.org/editor/xml" version="1.7" editor:version="1.0" locale="en">
-    <title>databot</title>
-    <category>aRbotics</category>
-    <description>PhyPhox inspired altitude sample</description>
-    <data-containers>
-        <container size="0">AL</container>
-        <container size="0">MS</container>
-    </data-containers>
-    <input>
-        <bluetooth editor:uuid="97" id="HMSoftdatabot" name="HMSoftdatabot" uuid="0000ffe0-0000-1000-8000-00805f9b34fb" mode="notification" subscribeOnStart="false">
-            <output char="0000ffe1-0000-1000-8000-00805f9b34fb" conversion="string" offset="0" length="13">AL</output>
-            <output char="0000ffe1-0000-1000-8000-00805f9b34fb" conversion="string" offset="14" length="13">MS</output>
-        </bluetooth>
-    </input>
-    <output>
-    </output>
-    <analysis sleep="0" onUserInput="false">
-    </analysis>
-    <views>
-        <view label="Raw Data">
-            <graph label="Pressure" labelX="Time (ms)" unitX="MS" labelY="Altitude (m)" unitY="AL" yPrecision="6" partialUpdate="true">
-                <input axis="x">MS</input>
-                <input axis="y">AL</input>
-            </graph>
-        </view>
-    </views>
-    <export>
-        <set name="databot">
-            <data name="Time (ms)">MS</data>
-            <data name="Altitude (m)">AL</data>
-        </set>
-    </export>
-</phyphox>
-
-*/
