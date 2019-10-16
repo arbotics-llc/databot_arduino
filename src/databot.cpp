@@ -384,17 +384,17 @@ void unpackSensorDataAndPad (DynamicJsonDocument &packet, const String key, Stri
 
 }
 
-void sendPacketFixedStringsFormat (DynamicJsonDocument &packet) {
-
-  String keys = String("abcdefghijklmnopqrstu");
+void sendPacketFixedStringsFormat (const String ordered_field_list, DynamicJsonDocument &packet) {
 
   String payload = String("");
 
   String single_field_value_padded = String("");
 
-  for (int n = 0; n < keys.length(); n++) {
+  if ((NULL == ordered_field_list) || (ordered_field_list.length() < 1)) return; // bag/invalid arguments
 
-    unpackSensorDataAndPad(packet, String(keys.charAt(n)), single_field_value_padded);
+  for (int n = 0; n < ordered_field_list.length(); n++) {
+
+    unpackSensorDataAndPad(packet, String(ordered_field_list.charAt(n)), single_field_value_padded);
 
     payload.concat(single_field_value_padded);
 

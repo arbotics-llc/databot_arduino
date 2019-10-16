@@ -60,7 +60,7 @@ float getExternalTemperature(DallasTemperature &tempsensor);
 
 //bluetooth low energy and logging communication helper functions
 void sendPacket(DynamicJsonDocument &packet);
-void sendPacketFixedStringsFormat(DynamicJsonDocument &packet);
+void sendPacketFixedStringsFormat(const String, DynamicJsonDocument &packet);
 void logData(OpenLog &myLog, DynamicJsonDocument &packet);
 void logData(OpenLog &myLog, const String &string);
 
