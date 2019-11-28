@@ -22,9 +22,6 @@
 
 // ******* BEGIN SENSOR CONFIGURATION SECTION OF THE SKETCH *******
 
-//give your current altitude in meters from sea level to get more accurate readings
-#define CURRENT_ALTITUDE 0 
-
 // Comment the following line to STOP the live serial output of sensor data.
 #define IDE
 
