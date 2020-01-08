@@ -360,55 +360,37 @@ void sendPacket(DynamicJsonDocument &packet){
   //most phones should be able to safely negotiate
 }
 
-void unpackSensorDataAndPad (DynamicJsonDocument &packet, const String key, String &string) {
+void sendPacketEx(const char *field_ordering, DynamicJsonDocument &packet) {
+
+  String broadcasted = "", kv = "";
 
   JsonObject object = packet.as<JsonObject>();
 
-  float f = 0.0f;
+  for (unsigned int i = 0; i < strlen(field_ordering); i++) {
 
-  if (object.containsKey(key)) {
+    String ky = String(field_ordering[i]);
 
-    JsonVariant jv = object.getMember(key);
+    if (object.containsKey(ky)) {
 
-    f = jv.as<float>();
+      JsonVariant jv = object.getMember(ky);
 
-  }
+      kv = (String(jv.as<float>(), SPKEX_DECIMAL_DIGITS_ACCY));
 
-  String jvs = String(f, BLUETOOTH_FIXED_FLOATPLACES); // Six digit decimal accuracy
+      kv.concat(SPKEX_ENDMARK);
 
-  string.concat(BLUETOOTH_FIXEDSIZE_PADDING.substring(0, BLUETOOTH_FIXED_FIELDSIZE-jvs.length()));
+    }
 
-  string.concat(jvs);
+    // Prefix the numerical data with '0' for app's that parse our stream using regular expressions
 
-  string.concat(BLUETOOTH_FIXEDSIZE_ENDMARK); // end of field mark
+    broadcasted.concat(String("0000000000000000").substring(0,SPKEX_FIXED_FIELD_WIDTH-kv.length()));
 
-}
+    broadcasted.concat(kv);
 
-void sendPacketFixedStringsFormat (const String ordered_field_list, DynamicJsonDocument &packet) {
-
-  String payload = String("");
-
-  String single_field_value_padded = String("");
-
-  if ((NULL == ordered_field_list) || (ordered_field_list.length() < 1)) return; // bag/invalid arguments
-
-  for (int n = 0; n < ordered_field_list.length(); n++) {
-
-    unpackSensorDataAndPad(packet, String(ordered_field_list.charAt(n)), single_field_value_padded);
-
-    payload.concat(single_field_value_padded);
-
-    single_field_value_padded = "";
+    kv = "";
 
   }
 
-  if (payload.length() > 0) {
-
-    Serial.println(payload);
-
-  }
-
-  delay(60);
+  Serial.write(broadcasted.c_str(), broadcasted.length());
 
 }
 

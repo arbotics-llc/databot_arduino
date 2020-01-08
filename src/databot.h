@@ -60,18 +60,16 @@ float getExternalTemperature(DallasTemperature &tempsensor);
 
 //bluetooth low energy and logging communication helper functions
 void sendPacket(DynamicJsonDocument &packet);
-void sendPacketFixedStringsFormat(const String, DynamicJsonDocument &packet);
+void sendPacketEx(const char *, DynamicJsonDocument &packet);
 void logData(OpenLog &myLog, DynamicJsonDocument &packet);
 void logData(OpenLog &myLog, const String &string);
 
 int freeRam();
 
-#define BLUETOOTH_FIXED_FIELDSIZE 13
+#define SPKEX_FIXED_FIELD_WIDTH 15
 
-#define BLUETOOTH_FIXED_FLOATPLACES 6
+#define SPKEX_DECIMAL_DIGITS_ACCY 5
 
-const String BLUETOOTH_FIXEDSIZE_PADDING = String("                                 ");
-
-const String BLUETOOTH_FIXEDSIZE_ENDMARK = String("|");
+#define SPKEX_ENDMARK ";"
 
 #endif
