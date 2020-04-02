@@ -12,6 +12,8 @@ This program is free software: you can redistribute it and/or modify
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <EEPROM.h>
+
 #ifndef DATABOT_H
 #define DATABOT_H
 
@@ -65,6 +67,8 @@ void logData(OpenLog &myLog, DynamicJsonDocument &packet);
 void logData(OpenLog &myLog, const String &string);
 
 int freeRam();
+
+String ReadCubeName();
 
 #define SPKEX_FIXED_FIELD_WIDTH 15
 

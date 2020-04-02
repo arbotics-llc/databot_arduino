@@ -362,7 +362,7 @@ void sendPacket(DynamicJsonDocument &packet){
 
 void sendPacketEx(const char *field_ordering, DynamicJsonDocument &packet) {
 
-  String broadcasted = "", kv = "";
+  String broadcasted = "";
 
   JsonObject object = packet.as<JsonObject>();
 
@@ -374,23 +374,17 @@ void sendPacketEx(const char *field_ordering, DynamicJsonDocument &packet) {
 
       JsonVariant jv = object.getMember(ky);
 
-      kv = (String(jv.as<float>(), SPKEX_DECIMAL_DIGITS_ACCY));
+      broadcasted.concat(ky);
 
-      kv.concat(SPKEX_ENDMARK);
+      broadcasted.concat((String(jv.as<float>(), SPKEX_DECIMAL_DIGITS_ACCY)));
+
+      broadcasted.concat(SPKEX_ENDMARK);
 
     }
 
-    // Prefix the numerical data with '0' for app's that parse our stream using regular expressions
-
-    broadcasted.concat(String("0000000000000000").substring(0,SPKEX_FIXED_FIELD_WIDTH-kv.length()));
-
-    broadcasted.concat(kv);
-
-    kv = "";
-
   }
 
-  Serial.write(broadcasted.c_str(), broadcasted.length());
+  Serial.println(broadcasted);
 
 }
 
@@ -444,4 +438,11 @@ int freeRam () {
   extern int __heap_start, *__brkval;
   int v;
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+}
+
+String ReadCubeName() {
+  String n = "";
+  for (int i = 0; i < 20; i++) n.concat((char)EEPROM.read(i));
+  n.trim();
+  return n;
 }
