@@ -439,10 +439,3 @@ int freeRam () {
   int v;
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
 }
-
-String ReadCubeName() {
-  String n = "";
-  for (int i = 0; i < 20; i++) n.concat((char)EEPROM.read(i));
-  n.trim();
-  return n;
-}
