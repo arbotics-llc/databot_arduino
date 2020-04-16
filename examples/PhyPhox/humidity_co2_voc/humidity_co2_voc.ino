@@ -60,7 +60,7 @@ void loop() {
 
   packet[F("v")] = sgp30.TVOC;
 
-  sendPacketFixedStringsFormat("mhcv", packet);
+  sendPacketEx("mhcv", packet);
 
   delay(1000);
 

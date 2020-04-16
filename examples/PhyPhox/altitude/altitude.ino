@@ -47,7 +47,7 @@ void loop() {
     
     packet[F("a")] = barometer.readAltitude();
     
-    sendPacketFixedStringsFormat("ma", packet);
+    sendPacketEx("ma", packet);
 
     delay(1000);
 
