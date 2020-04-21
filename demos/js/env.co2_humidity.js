@@ -14,7 +14,7 @@ var dashboard = {
 
 }
 
-google.charts.load('current', {'packages':['corechart','gauge']});
+google.charts.load('current', {'packages':['corechart']});
 
 google.charts.setOnLoadCallback(on_google_lib_loaded);
 
@@ -42,16 +42,14 @@ function drawChart() {
 
 	dashboard.visualA.chart = new google.visualization.LineChart(document.getElementById('chart'));
 
-	dashboard.visualB.data = google.visualization.arrayToDataTable([['Label', 'Value'],['PSI', 0]]);
+	dashboard.visualB.data = google.visualization.arrayToDataTable([
+			['Time', 'Humidity'],
+			['0', 0]
+		]);
 
-	dashboard.visualB.options = { width:700, height:520, min:0, max:1200, minorTicks:50 };
+	dashboard.visualB.options = { curveType: 'function', legend: { position: 'bottom' }};
 
-	dashboard.visualB.options.redFrom = dashboard.visualB.options.max * 0.80;
-	dashboard.visualB.options.redTo = dashboard.visualB.options.max;
-	dashboard.visualB.options.yellowFrom = dashboard.visualB.options.max * 0.60;
-	dashboard.visualB.options.yellowTo = dashboard.visualB.options.max * 0.80;
-
-	dashboard.visualB.chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+	dashboard.visualB.chart = new google.visualization.LineChart(document.getElementById('chart2'));
 
 	paint();
 
@@ -69,7 +67,7 @@ function process_databot_data (databot_data) {
 
 	dashboard.visualA.data.addRows([[databot_data[0].toString(), databot_data[1]]]);
 
-	dashboard.visualB.data.setValue(0, 1, databot_data[2]);
+	dashboard.visualB.data.addRows([[databot_data[0].toString(), databot_data[1]]]);
 
 	paint();
 
