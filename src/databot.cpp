@@ -360,6 +360,34 @@ void sendPacket(DynamicJsonDocument &packet){
   //most phones should be able to safely negotiate
 }
 
+void sendPacketEx(const char *field_ordering, DynamicJsonDocument &packet) {
+
+  String broadcasted = "";
+
+  JsonObject object = packet.as<JsonObject>();
+
+  for (unsigned int i = 0; i < strlen(field_ordering); i++) {
+
+    String ky = String(field_ordering[i]);
+
+    if (object.containsKey(ky)) {
+
+      JsonVariant jv = object.getMember(ky);
+
+      broadcasted.concat(ky);
+
+      broadcasted.concat((String(jv.as<float>(), SPKEX_DECIMAL_DIGITS_ACCY)));
+
+      broadcasted.concat(SPKEX_ENDMARK);
+
+    }
+
+  }
+
+  Serial.println(broadcasted);
+
+}
+
 /*
 * Function logData
 * converts JSON packet and sends to the SD card over i2c to be stored 

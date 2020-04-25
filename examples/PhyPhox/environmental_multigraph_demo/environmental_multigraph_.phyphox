@@ -1,0 +1,87 @@
+<phyphox xmlns="http://phyphox.org/xml" xmlns:editor="http://phyphox.org/editor/xml" version="1.7" editor:version="1.0" locale="en">
+    <title>databot Environment</title>
+    <category>aRbotics</category>
+    <color>d5e01a</color>
+    <description>This experiment is a general data collection tool using databot's environmental sensors as follows: Air Quality displays CO2 and Volatile Organic Compound (VOCs) in Parts Per Million (PPM) and Parts Per Billion (PPB). Environment displays Humidity, Temperature, and Air Pressure in % Relative Humidity (RH), Temperature in degrees Celsius (C), and Air Pressure in hectoPascals (hPA). Altitude is displaying your current altitude in Meters. Note that your altitude will fluctuate with the Air Pressure value as that is how it is calculated.  UV is displaying Ultraviolet light A and Ultraviolet B in milliWatts per square centimeter (mW/c2). This is a measurement of the amount of energy received over an area.  Light displays ambient light readings in Lux.  Lux is a standard unit representing &quot;luminous flux&quot; - like UV it is a measurement of intensity over an area.  In this case 1 lux is equal to one lumen per square meter. All of these values are plotted against time (T) in milliseconds.</description>
+    <data-containers>
+        <container size="0" static="false">m</container>
+        <container size="0" static="false">c</container>
+        <container size="0" static="false">v</container>
+        <container size="0" static="false">h</container>
+        <container size="0" static="false">t</container>
+        <container size="0" static="false">p</container>
+        <container size="0" static="false">e</container>
+        <container size="0" static="false">u</container>
+        <container size="0" static="false">b</container>
+        <container size="0" static="false">i</container>
+        <container size="0" static="false">x</container>
+    </data-containers>
+    <input>
+        <bluetooth id="HMSoftdatabot" name="HMSoftdatabot" uuid="0000ffe0-0000-1000-8000-00805f9b34fb" mode="notification" rate="1" subscribeOnStart="false">
+            <output char="0000ffe1-0000-1000-8000-00805f9b34fb" conversion="formattedString" separator=";" label="m">m</output>
+            <output char="0000ffe1-0000-1000-8000-00805f9b34fb" conversion="formattedString" separator=";" label="c">c</output>
+            <output char="0000ffe1-0000-1000-8000-00805f9b34fb" conversion="formattedString" separator=";" label="v">v</output>
+            <output char="0000ffe1-0000-1000-8000-00805f9b34fb" conversion="formattedString" separator=";" label="h">h</output>
+            <output char="0000ffe1-0000-1000-8000-00805f9b34fb" conversion="formattedString" separator=";" label="t">t</output>
+            <output char="0000ffe1-0000-1000-8000-00805f9b34fb" conversion="formattedString" separator=";" label="p">p</output>
+            <output char="0000ffe1-0000-1000-8000-00805f9b34fb" conversion="formattedString" separator=";" label="e">e</output>
+            <output char="0000ffe1-0000-1000-8000-00805f9b34fb" conversion="formattedString" separator=";" label="u">u</output>
+            <output char="0000ffe1-0000-1000-8000-00805f9b34fb" conversion="formattedString" separator=";" label="b">b</output>
+            <output char="0000ffe1-0000-1000-8000-00805f9b34fb" conversion="formattedString" separator=";" label="i">i</output>
+            <output char="0000ffe1-0000-1000-8000-00805f9b34fb" conversion="formattedString" separator=";" label="x">x</output>
+        </bluetooth>
+    </input>
+    <output>
+    </output>
+    <analysis sleep="0"  onUserInput="false">
+    </analysis>
+    <views>
+        <view label="Raw Data">
+            <graph label="Air Quality" aspectRatio="2.5" style="lines" lineWidth="1" color="ff7e22" partialUpdate="true" history="1" labelX="Time" labelY="CO2/VOC" labelZ="" unitX="ms" unitY="PPM/PPB" unitZ="" logX="false" logY="false" logZ="false" xPrecision="3" yPrecision="3" zPrecision="3" scaleMinX="auto" scaleMaxX="auto" scaleMinY="auto" scaleMaxY="auto" scaleMinZ="auto" scaleMaxZ="auto" minX="0" maxX="0" minY="0" maxY="0" minZ="0" maxZ="0"  mapWidth="0"       >
+                <input axis="x">m</input>
+                <input axis="y">c</input>
+                <input axis="x">m</input>
+                <input axis="y">v</input>
+            </graph>
+            <graph label="Environment" aspectRatio="2.5" style="lines" lineWidth="1" color="ff7e22" partialUpdate="true" history="1" labelX="Time" labelY="Hum/Temp/Press" labelZ="" unitX="ms" unitY="RH/C/hPA" unitZ="" logX="false" logY="false" logZ="false" xPrecision="3" yPrecision="3" zPrecision="3" scaleMinX="auto" scaleMaxX="auto" scaleMinY="auto" scaleMaxY="auto" scaleMinZ="auto" scaleMaxZ="auto" minX="0" maxX="0" minY="0" maxY="0" minZ="0" maxZ="0"  mapWidth="0"       >
+                <input axis="x">m</input>
+                <input axis="y">h</input>
+                <input axis="x">m</input>
+                <input axis="y">t</input>
+                <input axis="x">m</input>
+                <input axis="y">p</input>
+            </graph>
+            <graph label="Altitude" aspectRatio="2.5" style="lines" lineWidth="1" color="ff7e22" partialUpdate="true" history="1" labelX="Time" labelY="Altitude" labelZ="" unitX="ms" unitY="Meters" unitZ="" logX="false" logY="false" logZ="false" xPrecision="3" yPrecision="3" zPrecision="3" scaleMinX="auto" scaleMaxX="auto" scaleMinY="auto" scaleMaxY="auto" scaleMinZ="auto" scaleMaxZ="auto" minX="0" maxX="0" minY="0" maxY="0" minZ="0" maxZ="0"  mapWidth="0"       >
+                <input axis="x">m</input>
+                <input axis="y">e</input>
+            </graph>
+            <graph label="UV Light" aspectRatio="2.5" style="lines" lineWidth="1" color="ff7e22" partialUpdate="true" history="1" labelX="Time" labelY="UV A+B" labelZ="" unitX="ms" unitY="mW/cm2" unitZ="" logX="false" logY="false" logZ="false" xPrecision="3" yPrecision="3" zPrecision="3" scaleMinX="auto" scaleMaxX="auto" scaleMinY="auto" scaleMaxY="auto" scaleMinZ="auto" scaleMaxZ="auto" minX="0" maxX="0" minY="0" maxY="0" minZ="0" maxZ="0"  mapWidth="0"       >
+                <input axis="x">m</input>
+                <input axis="y">u</input>
+                <input axis="x">m</input>
+                <input axis="y">b</input>
+                <input axis="x">m</input>
+                <input axis="y">i</input>
+            </graph>
+            <graph label="Light" aspectRatio="2.5" style="lines" lineWidth="1" color="ff7e22" partialUpdate="true" history="1" labelX="Time" labelY="Light" labelZ="" unitX="ms" unitY="Lux" unitZ="" logX="false" logY="false" logZ="false" xPrecision="3" yPrecision="3" zPrecision="3" scaleMinX="auto" scaleMaxX="auto" scaleMinY="auto" scaleMaxY="auto" scaleMinZ="auto" scaleMaxZ="auto" minX="0" maxX="0" minY="0" maxY="0" minZ="0" maxZ="0"  mapWidth="0"       >
+                <input axis="x">m</input>
+                <input axis="y">x</input>
+            </graph>
+        </view>
+    </views>
+    <export>
+        <set name="databot">
+            <data name="Time (ms)">m</data>
+            <data name="CO2">c</data>
+            <data name="VOC">v</data>
+            <data name="Humidity">h</data>
+            <data name="Temp">t</data>
+            <data name="Pressure">p</data>
+            <data name="Altitude">e</data>
+            <data name="UVa">u</data>
+            <data name="UVb">b</data>
+            <data name="Index">i</data>
+            <data name="Lux">x</data>
+        </set>
+    </export>
+</phyphox>

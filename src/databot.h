@@ -41,6 +41,7 @@ bool setupIMU(MPU9250 &imu, uint8_t sample_rate, uint8_t afs_opt, uint8_t gfs_op
 
 #define ALTITUDE 0
 #define PRESSURE 1
+
 //MPL3115A2 altitude/pressure sensor helper function
 void setupMPL3115A2(MPL3115A2 &barometer, int option);
 
@@ -59,9 +60,16 @@ float getExternalTemperature(DallasTemperature &tempsensor);
 
 //bluetooth low energy and logging communication helper functions
 void sendPacket(DynamicJsonDocument &packet);
+void sendPacketEx(const char *, DynamicJsonDocument &packet);
 void logData(OpenLog &myLog, DynamicJsonDocument &packet);
 void logData(OpenLog &myLog, const String &string);
 
 int freeRam();
+
+#define SPKEX_FIXED_FIELD_WIDTH 15
+
+#define SPKEX_DECIMAL_DIGITS_ACCY 5
+
+#define SPKEX_ENDMARK ";"
 
 #endif

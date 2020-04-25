@@ -1,0 +1,34 @@
+<phyphox xmlns="http://phyphox.org/xml" xmlns:editor="http://phyphox.org/editor/xml" version="1.7" editor:version="1.0" locale="en">
+    <title>databot</title>
+    <category>aRbotics</category>
+    <color>d5e01a</color>
+    <description>PhyPhox inspired CO2 sample</description>
+    <data-containers>
+        <container size="0">MS</container>
+        <container size="0">CO2</container>
+    </data-containers>
+    <input>
+        <bluetooth editor:uuid="97" id="HMSoftdatabot" name="HMSoftdatabot" uuid="0000ffe0-0000-1000-8000-00805f9b34fb" mode="notification" subscribeOnStart="false">
+            <output char="0000ffe1-0000-1000-8000-00805f9b34fb" conversion="string" offset="0" length="14">MS</output>
+            <output char="0000ffe1-0000-1000-8000-00805f9b34fb" conversion="string" offset="15" length="14">CO2</output>
+        </bluetooth>
+    </input>
+    <output>
+    </output>
+    <analysis sleep="0" onUserInput="false">
+    </analysis>
+    <views>
+        <view label="Raw Data">
+            <graph label="CO2" labelX="Time" unitX="ms" labelY="Carbon Dioxide" unitY="ppm" yPrecision="5" partialUpdate="true">
+                <input axis="x">MS</input>
+                <input axis="y">CO2</input>
+            </graph>
+        </view>
+    </views>
+    <export>
+        <set name="databot">
+            <data name="Time (ms)">MS</data>
+            <data name="Carbon Dioxide">CO2</data>
+        </set>
+    </export>
+</phyphox>
