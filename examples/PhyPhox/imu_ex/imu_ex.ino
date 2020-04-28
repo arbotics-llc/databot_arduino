@@ -5,7 +5,7 @@
 #define I2Cclock 400000
 #define I2Cport Wire
 
-#define CURRENT_ALTITUDE 86 // meters
+#define CURRENT_ALTITUDE 0 // meters
 
 float smoothPressure = 0;
 
