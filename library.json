@@ -1,21 +1,21 @@
 {
-  "name": "databot",
-  "keywords": "databot, arbotics",
-  "description": "this library gets your databot running to collect sensor data for your experiments",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/arbotics-llc/databot_arduino"
-  },
-  "authors": {
-    "name": "Sean Tucker",
-    "email": "sean.micahel.tucker@gmail.com",
-    "maintainer": true
-  },
-  "frameworks": [
-    "arduino"
-  ],
-  "platforms": [
-    "atmelavr"
-  ],
-  "version":"0.2.5"
+name: "databot",
+keywords: "databot, arbotics",
+description: "this library gets your databot running to collect sensor data for your experiments",
+repository: {
+type: "git",
+url: "https://github.com/arbotics-llc/databot_arduino"
+},
+authors: {
+name: "aRbotics, LLC",
+email: "contact@databot.us.com",
+maintainer: true
+},
+frameworks: [
+"arduino"
+],
+platforms: [
+"atmelavr"
+],
+version: "1.1.1"
 }
