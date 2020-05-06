@@ -112,7 +112,7 @@ void loop() {
   updateImuGyro(myIMU);
   updateImuMag(myIMU);
 
-  packet[F("m")] = ((millis()-timestamp) / 1000) * 1.0;
+  packet[F("m")] = ((millis()-timestamp));
 
   packet[F("c")] = co2; // CO2
   packet[F("v")] = tvoc; // VOC
