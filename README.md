@@ -17,7 +17,7 @@ accordingly. We recommend shopping with Arduino, Sparkfun, and Adafruit for your
 Uno, sensors, and components if you do this as we all benefit from the incredible open
 source resources they have contributed to the Arduino community.
 
-This is initial release of the databot library includes the following features:
+This initial release of the databot library includes the following features:
 
 - Complete libraries and sample sketches required to conduct educational activities using
 the Arduino IDE with databot or a compatible Arduino board with the appropriate
