@@ -68,7 +68,7 @@ void setup() {
 
   sgp30.begin();
   sgp30.initAirQuality();
-  sgp30.setHumidity(doubleToFixedPoint(RHtoAbsolute(shtc3.toPercent(),shtc3.toDegC())));
+  sgp30.setHumidity(doubleToFixedPoint(RHtoAbsolute(shtc3.toPercent(), shtc3.toDegC())));
 
   setupVEML6075(uv);
 
