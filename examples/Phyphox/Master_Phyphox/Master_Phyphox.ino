@@ -46,7 +46,7 @@ void setup() {
   digitalWrite(A3, LOW);
 
   Serial.begin(9600);
-  
+
   Serial.flush();
 
   delay(1000);  // pause while sensors finish starting up
@@ -73,18 +73,17 @@ void setup() {
   setupVEML6075(uv);
 
   setupIMU(myIMU, 255, accel_range, gyro_range, mag_range);
-  
+
   smoothPressure = barometer.readPressure();
 
   Serial.flush();
-
 }
 
 void loop() {
 
   // Query the sensors
-  
-  float rawReading; 
+
+  float rawReading;
 
   rawReading = barometer.readPressure();
 
@@ -96,7 +95,7 @@ void loop() {
   shtc3.sleep(true);
 
   float relhumidity = shtc3.toPercent();
-  float abshumidity = RHtoAbsolute(relhumidity,shtc3.toDegC());
+  float abshumidity = RHtoAbsolute(relhumidity, shtc3.toDegC());
 
   sgp30.measureAirQuality();
 
@@ -112,7 +111,11 @@ void loop() {
   updateImuGyro(myIMU);
   updateImuMag(myIMU);
 
-  packet[F("m")] = ((millis()-timestamp));
+  float tm = (millis() - timestamp);
+  float ft = tm / 1000;
+  packet[F("m")] = (ft);
+  
+//  packet[F("m")] = ((millis() - timestamp));
 
   packet[F("c")] = co2; // CO2
   packet[F("v")] = tvoc; // VOC
@@ -120,7 +123,7 @@ void loop() {
   packet[F("t")] = getExternalTemperature(tempsensor); // Temperature
 
   packet[F("p")] = smoothPressure / 100.0; // Air pressure
-  packet[F("e")] = 44330.77 * (1-pow((smoothPressure/101326), 0.1902632)); // Altitude
+  packet[F("e")] = 44330.77 * (1 - pow((smoothPressure / 101326), 0.1902632)); // Altitude
   packet[F("u")] = uva; // UVa
   packet[F("b")] = uvb; // UVb
   packet[F("i")] = uvindex; // Index
@@ -130,14 +133,13 @@ void loop() {
   packet[F("d")] = myIMU.ay * 9.8;
   packet[F("f")] = myIMU.az * 9.8;
   packet[F("g")] = myIMU.gx * DEG_TO_RAD;
-  packet[F("j")] = myIMU.gy * DEG_TO_RAD; 
+  packet[F("j")] = myIMU.gy * DEG_TO_RAD;
   packet[F("k")] = myIMU.gz * DEG_TO_RAD;
   packet[F("l")] = myIMU.mx;
   packet[F("n")] = myIMU.my;
   packet[F("o")] = myIMU.mz;
 
   sendPacketEx("mcvhtpeubixadfgjklno", packet);
-
   delay(100);
 
 }

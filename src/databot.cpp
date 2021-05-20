@@ -375,17 +375,22 @@ void sendPacketEx(const char *field_ordering, DynamicJsonDocument &packet) {
       JsonVariant jv = object.getMember(ky);
 
       broadcasted.concat(ky);
-
-      broadcasted.concat((String(jv.as<float>(), SPKEX_DECIMAL_DIGITS_ACCY)));
-
+	  
+	  if(ky == "m")
+	  {
+		broadcasted.concat((String(jv.as<float>(), 2)));
+	  }
+	  else
+	  {
+		broadcasted.concat((String(jv.as<float>(), SPKEX_DECIMAL_DIGITS_ACCY)));
+	  }
       broadcasted.concat(SPKEX_ENDMARK);
-
     }
 
   }
 
   Serial.println(broadcasted);
-
+  //ESP_BT.println(broadcasted);
 }
 
 /*
